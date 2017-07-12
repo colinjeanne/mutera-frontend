@@ -37,12 +37,21 @@
                 border: thin solid black;
                 border-radius: 10px;
                 display: flex;
+                justify-content: space-between;
+
+                position: relative;
+                box-sizing: border-box;
+                width: 9em;
+                min-height: 9em;
+            }
+
+            .tree-content {
+                display: flex;
                 flex-direction: column;
                 justify-content: center;
 
                 position: relative;
-                width: 9em;
-                height: 9em;
+                left: 2em;
 
                 text-align: center;
             }
@@ -52,11 +61,11 @@
                 flex-direction: column;
                 justify-content: space-between;
 
-                position: absolute;
+                position: relative;
                 width: 3em;
-                height: 100%;
-                left: 8em;
-                top: 0;
+                height: calc(100% + 2px);
+                left: 2em;
+                top: -1px;
             }
 
             .connector {
@@ -75,9 +84,16 @@
             }
 
             .editor-toolbar .tree-node {
+                justify-content: center;
+
                 margin-bottom: 1em;
                 width: 3em;
                 height: 3em;
+                min-height: 3em;
+            }
+
+            .editor-toolbar .tree-content {
+                left: 0;
             }
 
             .editor-toolbar .connectors {

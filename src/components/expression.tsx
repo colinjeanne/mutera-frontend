@@ -44,11 +44,14 @@ type ExpressionProps = OwnProps & MappedProps & CollectedProps & DispatchProp<an
 const source: DragSourceSpec<ExpressionProps> = {
     beginDrag(props) {
         if (!props.expression) {
+            const operatorData = getOperatorData(props.operator);
             return {
+                arity: operatorData.arity,
                 operator: props.operator
             };
         } else if (props.expression.arity === 0) {
             return {
+                arity: props.expression.arity,
                 data: props.expression.data,
                 id: props.id,
                 operator: props.operator,
@@ -56,6 +59,7 @@ const source: DragSourceSpec<ExpressionProps> = {
             };
         } else if (props.expression.arity === 1) {
             return {
+                arity: props.expression.arity,
                 id: props.id,
                 leftId: props.expression.leftId,
                 operator: props.operator,
@@ -64,6 +68,7 @@ const source: DragSourceSpec<ExpressionProps> = {
         }
 
         return {
+            arity: props.expression.arity,
             id: props.id,
             leftId: props.expression.leftId,
             operator: props.operator,
@@ -96,15 +101,20 @@ const Expression: React.SFC<ExpressionProps> = props => {
                 leftChild = (
                     <data.type id={props.leftChild.id} />
                 );
+            } else if (operatorData.connectorType === 'boolean') {
+                leftChild = (
+                    <BooleanExpressionConnector
+                        isLeftChild={true}
+                        parentId={props.id}
+                    />
+                );
             } else {
-                if (operatorData.connectorType === 'boolean') {
-                    leftChild = [(
-                        <BooleanExpressionConnector
-                            isLeftChild={true}
-                            parentId={props.id}
-                        />
-                    )];
-                }
+                leftChild = (
+                    <RealExpressionConnector
+                        isLeftChild={true}
+                        parentId={props.id}
+                    />
+                );
             }
         }
 
@@ -146,8 +156,10 @@ const Expression: React.SFC<ExpressionProps> = props => {
 
     return props.connectDragSource(
         <div className={classes.join(' ')}>
-            <div className='expressionType'>
-                {props.operator}
+            <div className='tree-content'>
+                <div>
+                    {props.operator}
+                </div>
             </div>
             <div className='connectors'>
                 {leftChild}

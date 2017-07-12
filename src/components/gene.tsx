@@ -108,11 +108,13 @@ class Gene extends React.Component<GeneProps> {
 
         return this.props.connectDragSource(
             <div className={classes.join(' ')}>
-                <div>
-                    Whenever
-                </div>
-                <div>
-                    Set {this.props.id ? this.props.id.id : ''} to
+                <div className='tree-content'>
+                    <div>
+                        Whenever
+                    </div>
+                    <div>
+                        Set {this.props.id ? this.props.id.id : ''} to
+                    </div>
                 </div>
                 <div className='connectors'>
                     {condition}
