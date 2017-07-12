@@ -1,0 +1,46 @@
+{
+  "name": "mutera-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Mutera",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf umd coverage",
+    "precoverage": "npm run build",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive",
+    "lint": "tslint -p tsconfig.json --type-check",
+    "prebuild": "npm run clean & npm run lint",
+    "build": "webpack --config webpack.config.js",
+    "pretest": "npm run build",
+    "test": "mocha --recursive"
+  },
+  "author": "Colin Jeanne <colinjeanne@hotmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.2.1",
+    "chai": "^4.0.0",
+    "mocha": "^3.4.2",
+    "rimraf": "^2.6.1",
+    "source-map-loader": "^0.2.1",
+    "tslint": "^5.5.0",
+    "tslint-react": "^3.0.0",
+    "typescript": "^2.4.1",
+    "webpack": "^2.6.1"
+  },
+  "dependencies": {
+    "@types/react": "^15.0.35",
+    "@types/react-dnd": "^2.0.33",
+    "@types/react-dnd-html5-backend": "^2.1.8",
+    "@types/react-dom": "^15.5.1",
+    "@types/react-redux": "^4.4.45",
+    "@types/redux": "^3.6.31",
+    "@types/redux-actions": "^1.2.6",
+    "react": "^15.0.0",
+    "react-dnd": "^2.4.0",
+    "react-dnd-html5-backend": "^2.4.1",
+    "react-dom": "^15.0.0",
+    "react-redux": "^5.0.5",
+    "redux": "^3.0.0",
+    "redux-actions": "^2.0.0"
+  }
+}

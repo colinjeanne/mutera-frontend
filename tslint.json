@@ -1,0 +1,36 @@
+{
+    "extends": [
+        "tslint:recommended",
+        "tslint-react"
+    ],
+    "rules": {
+        "arrow-parens": [
+            true,
+            "ban-single-arg-parens"
+        ],
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "interface-name": [
+            false
+        ],
+        "linebreak-style": [
+            true,
+            "LF"
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "jsx-single"
+        ],
+        "trailing-comma": [
+            true,
+            {
+                "multiline": "never",
+                "singleline": "never"
+            }
+        ]
+    }
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Mutera</title>
+        <meta charset="utf-8">
+        <style type="text/css">
+            html {
+                height: 100%;
+            }
+
+            body {
+                height: 100%;
+
+                padding: 0;
+                margin: 0;
+            }
+
+            #app {
+                height: 100%;
+            }
+
+            .editor-root {
+                display: flex;
+                justify-content: flex-start;
+                height: 100%;
+            }
+
+            .hovered {
+                background-color: red;
+            }
+
+            .gene-drop-target {
+                min-height: 1em;
+            }
+
+            .tree-node {
+                border: thin solid black;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                position: relative;
+                width: 9em;
+                height: 9em;
+
+                text-align: center;
+            }
+
+            .connectors {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                position: absolute;
+                width: 3em;
+                height: 100%;
+                left: 8em;
+                top: 0;
+            }
+
+            .connector {
+                border: thin solid black;
+
+                width: 3em;
+                height: 3em;
+            }
+
+            .gene {
+                justify-content: space-around;
+            }
+
+            .editor-toolbar {
+                padding: 1em;
+            }
+
+            .editor-toolbar .tree-node {
+                margin-bottom: 1em;
+                width: 3em;
+                height: 3em;
+            }
+
+            .editor-toolbar .connectors {
+                display: none;
+            }
+
+            .gene-editor {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                flex-grow: 1;
+            }
+
+            .gene-editor > :last-child {
+                flex-grow: 1;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"></script>
+        <script src="../umd/main.js"></script>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+    <script>
+        const app = document.getElementById('app');
+        ReactDOM.render(React.createElement(mutera.Root), app);
+    </script>
+</html>
