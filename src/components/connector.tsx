@@ -16,12 +16,19 @@ import {
     DropExpressionPayload
 } from './../actions/index';
 import { Expression } from './../types/expression';
-import { Id } from './../types/id';
+import {
+    Id,
+    isGeneId
+} from './../types/id';
 import { State } from './../types/state';
 
 interface OwnProps {
     isLeftChild: boolean;
     parentId: Id;
+}
+
+interface MappedProps {
+    ancestors: Id[];
 }
 
 interface DispatchProps {
@@ -33,7 +40,7 @@ interface CollectedProps {
     isOver: boolean;
 }
 
-type ConnectorProps = OwnProps & DispatchProps & CollectedProps;
+type ConnectorProps = OwnProps & MappedProps & DispatchProps & CollectedProps;
 
 const target: DropTargetSpec<ConnectorProps> = {
     drop(props, monitor) {
@@ -46,12 +53,21 @@ const target: DropTargetSpec<ConnectorProps> = {
             isLeftChild: props.isLeftChild,
             parentId: props.parentId
         });
+    },
+
+    canDrop(props, monitor) {
+        if (!monitor) {
+            return false;
+        }
+
+        const expression = monitor.getItem() as Expression;
+        return !props.ancestors.includes(expression.id);
     }
 };
 
 const collect: DropTargetCollector = (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver() && monitor.canDrop()
 });
 
 const expressionDropTarget: React.SFC<ConnectorProps> = props => {
@@ -63,14 +79,34 @@ const expressionDropTarget: React.SFC<ConnectorProps> = props => {
     return props.connectDropTarget(<div className={classes.join(' ')} />);
 };
 
+const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
+    const ancestors: Id[] = [];
+
+    let ancestorId = ownProps.parentId;
+    while (ancestorId) {
+        ancestors.push(ancestorId);
+
+        if (isGeneId(ancestorId)) {
+            break;
+        }
+
+        const ancestor = state.expressions.get(ancestorId) as Expression;
+        ancestorId = ancestor.parentId;
+    }
+
+    return {
+        ancestors
+    };
+};
+
 const mapDispatchToProps = (dispatch: Dispatch<State>) => bindActionCreators(
     {
         onDropExpression: dropExpression
     },
     dispatch);
 
-export const Connector = reduxConnect<undefined, DispatchProps, OwnProps>(
-    undefined,
+export const Connector = reduxConnect<MappedProps, DispatchProps, OwnProps>(
+    mapStateToProps,
     mapDispatchToProps);
 
 export const BooleanExpressionConnector =
