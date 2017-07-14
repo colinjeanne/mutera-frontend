@@ -90,16 +90,10 @@ const Expression: React.SFC<ExpressionProps> = props => {
     if ((operatorData.connectorType !== 'none') && props.id) {
         if (operatorData.arity !== 0) {
             if (props.leftChild) {
-                // Put the type in an object because React is looking for a '.'
-                // in the element name when deciding if it should interpret it
-                // as a variable.
-                const data = {
-                    type:
-                        getExpressionForOperator(props.leftChild.operator)
-                };
+                const Type = getExpressionForOperator(props.leftChild.operator);
 
                 leftChild = (
-                    <data.type id={props.leftChild.id} />
+                    <Type id={props.leftChild.id} />
                 );
             } else if (operatorData.connectorType === 'boolean') {
                 leftChild = (
@@ -120,16 +114,11 @@ const Expression: React.SFC<ExpressionProps> = props => {
 
         if (operatorData.arity === 2) {
             if (props.rightChild) {
-                // Put the type in an object because React is looking for a '.'
-                // in the element name when deciding if it should interpret it
-                // as a variable.
-                const data = {
-                    type:
-                        getExpressionForOperator(props.rightChild.operator)
-                };
+                const Type =
+                    getExpressionForOperator(props.rightChild.operator);
 
                 rightChild = (
-                    <data.type id={props.rightChild.id} />
+                    <Type id={props.rightChild.id} />
                 );
             } else if (operatorData.connectorType === 'boolean') {
                 rightChild = (

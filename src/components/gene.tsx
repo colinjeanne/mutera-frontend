@@ -53,77 +53,63 @@ const collect: DragSourceCollector = (connect, monitor) => {
     };
 };
 
-class Gene extends React.Component<GeneProps> {
-    public render() {
-        const classes = ['gene', 'tree-node'];
-        if (this.props.isDragging) {
-            classes.push('dragged');
+const Gene: React.SFC<GeneProps> = props => {
+    const classes = ['gene', 'tree-node'];
+    if (props.isDragging) {
+        classes.push('dragged');
+    }
+
+    let condition;
+    let expression;
+    if (props.gene) {
+        if (props.condition) {
+            const Type = getExpressionForOperator(props.condition.operator);
+
+            condition = (
+                <Type id={props.condition.id} />
+            );
+        } else {
+            condition = (
+                <BooleanExpressionConnector
+                    isLeftChild={true}
+                    parentId={props.gene.id}
+                />
+            );
         }
 
-        let condition;
-        let expression;
-        if (this.props.gene) {
-            if (this.props.condition) {
-                // Put the type in an object because React is looking for a '.'
-                // in the element name when deciding if it should interpret it
-                // as a variable.
-                const data = {
-                    type:
-                        getExpressionForOperator(this.props.condition.operator)
-                };
+        if (props.expression) {
+            const Type = getExpressionForOperator(props.expression.operator);
 
-                condition = (
-                    <data.type id={this.props.condition.id} />
-                );
-            } else {
-                condition = (
-                    <BooleanExpressionConnector
-                        isLeftChild={true}
-                        parentId={this.props.gene.id}
-                    />
-                );
-            }
-
-            if (this.props.expression) {
-                // Put the type in an object because React is looking for a '.'
-                // in the element name when deciding if it should interpret it
-                // as a variable.
-                const data = {
-                    type:
-                        getExpressionForOperator(this.props.expression.operator)
-                };
-
-                expression = (
-                    <data.type id={this.props.expression.id} />
-                );
-            } else {
-                expression = (
-                    <RealExpressionConnector
-                        isLeftChild={false}
-                        parentId={this.props.gene.id}
-                    />
-                );
-            }
+            expression = (
+                <Type id={props.expression.id} />
+            );
+        } else {
+            expression = (
+                <RealExpressionConnector
+                    isLeftChild={false}
+                    parentId={props.gene.id}
+                />
+            );
         }
+    }
 
-        return this.props.connectDragSource(
-            <div className={classes.join(' ')}>
-                <div className='tree-content'>
-                    <div>
-                        Whenever
-                    </div>
-                    <div>
-                        Set {this.props.id ? this.props.id.id : ''} to
-                    </div>
+    return props.connectDragSource(
+        <div className={classes.join(' ')}>
+            <div className='tree-content'>
+                <div>
+                    Whenever
                 </div>
-                <div className='connectors'>
-                    {condition}
-                    {expression}
+                <div>
+                    Set {props.id ? props.id.id : ''} to
                 </div>
             </div>
-        );
-    }
-}
+            <div className='connectors'>
+                {condition}
+                {expression}
+            </div>
+        </div>
+    );
+};
 
 const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
     if (!ownProps.id) {
