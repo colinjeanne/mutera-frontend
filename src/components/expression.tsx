@@ -20,16 +20,16 @@ import {
 } from './connector';
 
 interface BaseExpressionProps {
-    id?: ExpressionId;
+    id: ExpressionId;
 }
 
 interface OwnProps {
-    id?: ExpressionId;
+    id: ExpressionId;
     operator: Operator;
 }
 
 interface MappedProps {
-    expression?: ExpressionType;
+    expression: ExpressionType;
     leftChild?: ExpressionType;
     rightChild?: ExpressionType;
 }
@@ -43,13 +43,7 @@ type ExpressionProps = OwnProps & MappedProps & CollectedProps & DispatchProp<an
 
 const source: DragSourceSpec<ExpressionProps> = {
     beginDrag(props) {
-        if (!props.expression) {
-            const operatorData = getOperatorData(props.operator);
-            return {
-                arity: operatorData.arity,
-                operator: props.operator
-            };
-        } else if (props.expression.arity === 0) {
+        if (props.expression.arity === 0) {
             return {
                 arity: props.expression.arity,
                 data: props.expression.data,
@@ -87,7 +81,7 @@ const Expression: React.SFC<ExpressionProps> = props => {
     const operatorData = getOperatorData(props.operator);
     let leftChild;
     let rightChild;
-    if ((operatorData.connectorType !== 'none') && props.id) {
+    if (operatorData.connectorType !== 'none') {
         if (operatorData.arity !== 0) {
             if (props.leftChild) {
                 const Type = getExpressionForOperator(props.leftChild.operator);
@@ -159,10 +153,6 @@ const Expression: React.SFC<ExpressionProps> = props => {
 };
 
 const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
-    if (!ownProps.id) {
-        return {};
-    }
-
     const expression = state.expressions.get(ownProps.id) as ExpressionType;
     const leftChild = (expression.arity !== 0) && expression.leftId ?
         state.expressions.get(expression.leftId) :

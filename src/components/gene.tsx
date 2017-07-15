@@ -20,14 +20,14 @@ import {
 import { getExpressionForOperator } from './expression';
 
 interface OwnProps {
-    id?: GeneId;
+    id: GeneId;
     type?: string;
 }
 
 interface MappedProps {
     condition?: Expression;
     expression?: Expression;
-    gene?: GeneType;
+    gene: GeneType;
 }
 
 interface CollectedProps {
@@ -61,36 +61,34 @@ const Gene: React.SFC<GeneProps> = props => {
 
     let condition;
     let expression;
-    if (props.gene) {
-        if (props.condition) {
-            const Type = getExpressionForOperator(props.condition.operator);
+    if (props.condition) {
+        const Type = getExpressionForOperator(props.condition.operator);
 
-            condition = (
-                <Type id={props.condition.id} />
-            );
-        } else {
-            condition = (
-                <BooleanExpressionConnector
-                    isLeftChild={true}
-                    parentId={props.gene.id}
-                />
-            );
-        }
+        condition = (
+            <Type id={props.condition.id} />
+        );
+    } else {
+        condition = (
+            <BooleanExpressionConnector
+                isLeftChild={true}
+                parentId={props.gene.id}
+            />
+        );
+    }
 
-        if (props.expression) {
-            const Type = getExpressionForOperator(props.expression.operator);
+    if (props.expression) {
+        const Type = getExpressionForOperator(props.expression.operator);
 
-            expression = (
-                <Type id={props.expression.id} />
-            );
-        } else {
-            expression = (
-                <RealExpressionConnector
-                    isLeftChild={false}
-                    parentId={props.gene.id}
-                />
-            );
-        }
+        expression = (
+            <Type id={props.expression.id} />
+        );
+    } else {
+        expression = (
+            <RealExpressionConnector
+                isLeftChild={false}
+                parentId={props.gene.id}
+            />
+        );
     }
 
     return props.connectDragSource(
@@ -100,7 +98,7 @@ const Gene: React.SFC<GeneProps> = props => {
                     Whenever
                 </div>
                 <div>
-                    Set {props.id ? props.id.id : ''} to
+                    Set {props.id.id} to
                 </div>
             </div>
             <div className='connectors'>
@@ -112,10 +110,6 @@ const Gene: React.SFC<GeneProps> = props => {
 };
 
 const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
-    if (!ownProps.id) {
-        return {};
-    }
-
     const gene = state.genes.get(ownProps.id) as GeneType;
     const condition = gene.conditionId ?
         state.expressions.get(gene.conditionId) :

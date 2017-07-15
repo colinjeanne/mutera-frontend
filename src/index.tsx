@@ -3,7 +3,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
 import Editor from './components/editor';
-import EditorToolbar from './components/toolbar';
+import EditorToolbar from './components/toolbar/toolbar';
 import { store } from './store';
 
 const base = () => (
