@@ -59,7 +59,10 @@ const geneInsertionPoint: React.SFC<GeneInsertionPointProps> = props => {
         classes.push('hovered');
     }
 
-    return props.connectDropTarget(<div className={classes.join(' ')} />);
+    return props.connectDropTarget(
+        <div className={classes.join(' ')} >
+            <hr />
+        </div>);
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): DispatchProps =>
