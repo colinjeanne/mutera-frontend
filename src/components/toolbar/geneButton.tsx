@@ -40,7 +40,7 @@ const ToolbarButton: React.SFC<Props> = props => {
 
     return props.connectDragSource(
         <div className={classes.join(' ')}>
-            Gene
+            Add Gene
         </div>
     );
 };

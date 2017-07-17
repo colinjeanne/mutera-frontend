@@ -21,7 +21,10 @@
 
             .editor-root {
                 display: flex;
+                flex-direction: column;
                 justify-content: flex-start;
+
+                padding: 0 1em 1em;
                 height: 100%;
             }
 
@@ -34,6 +37,8 @@
             }
 
             .tree-node {
+                cursor: grab;
+
                 display: flex;
                 justify-content: end;
 
@@ -76,24 +81,55 @@
             }
 
             .editor-toolbar {
-                padding: 1em;
+                background: white;
+
+                position: fixed;
+                z-index: 1;
+
+                padding-top: 1em;
+            }
+
+            .toolbar-group {
+                border-left: thin solid black;
+                display: inline-block;
+
+                padding: 0 1em;
+            }
+
+            .toolbar-group:last-of-type {
+                border-right: thin solid black;
+            }
+
+            .toolbar-group-label {
+                font-size: 1.2em;
+            }
+
+            .toolbar-group-items {
+                display: flex;
+                margin-top: 0.25em;
             }
 
             .toolbar-button {
+                cursor: grab;
+
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
 
                 border: thin solid black;
-                border-radius: 10px;
+                border-radius: 5px;
 
                 box-sizing: border-box;
-                margin-bottom: 1em;
-                width: 3em;
+                min-width: 3em;
                 height: 3em;
-                min-height: 3em;
+                padding: 0 0.5em;
+                margin-right: 0.5em;
 
                 text-align: center;
+            }
+
+            .toolbar-button:last-of-type {
+                margin-right: 0;
             }
 
             .gene-editor {
@@ -101,6 +137,7 @@
                 flex-direction: column;
                 justify-content: flex-start;
                 flex-grow: 1;
+                margin-top: 5.75em;
             }
 
             .gene-editor > :last-child {
