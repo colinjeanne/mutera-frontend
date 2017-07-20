@@ -51,11 +51,11 @@ class EditorToolbar extends React.Component {
                     </RealExpressionButton>
                 </Group>
                 <Group label='Comparison'>
-                    <BooleanExpressionButton operator='G'>
-                        {'>'}
-                    </BooleanExpressionButton>
                     <BooleanExpressionButton operator='L'>
                         {'<'}
+                    </BooleanExpressionButton>
+                    <BooleanExpressionButton operator='G'>
+                        {'>'}
                     </BooleanExpressionButton>
                 </Group>
             </div>
