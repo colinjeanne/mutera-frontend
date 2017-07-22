@@ -21,7 +21,6 @@ const editor: React.SFC<EditorProps> = props => {
             <Gene
                 id={gene.id}
                 key={gene.id.type + gene.id.id}
-                // type={gene.type}
             />);
         return aggregate;
     }, []);

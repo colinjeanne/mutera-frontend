@@ -5,14 +5,24 @@ import {
     DragSourceCollector,
     DragSourceSpec
 } from 'react-dnd';
+import { connect as reduxConnect } from 'react-redux';
 import {
-    connect as reduxConnect,
-    DispatchProp
-} from 'react-redux';
+    Action,
+    bindActionCreators,
+    Dispatch
+} from 'redux';
+import {
+    completeGene,
+    CompleteGenePayload
+} from './../actions/index';
 import { Expression } from './../types/expression';
 import { Gene as GeneType } from './../types/gene';
 import { GeneId } from './../types/id';
 import { State } from './../types/state';
+import {
+    isBooleanVariable,
+    OutputVariable
+} from './../types/variable';
 import {
     BooleanExpressionConnector,
     RealExpressionConnector
@@ -21,7 +31,6 @@ import { getExpressionForOperator } from './expression';
 
 interface OwnProps {
     id: GeneId;
-    type?: string;
 }
 
 interface MappedProps {
@@ -30,18 +39,21 @@ interface MappedProps {
     gene: GeneType;
 }
 
+interface DispatchProps {
+    onCompleteGene: (s: CompleteGenePayload) => Action;
+}
+
 interface CollectedProps {
     connectDragSource: ConnectDragSource;
     isDragging: boolean;
 }
 
-type GeneProps = OwnProps & MappedProps & CollectedProps & DispatchProp<any>;
+type GeneProps = OwnProps & MappedProps & CollectedProps & DispatchProps;
 
 const source: DragSourceSpec<GeneProps> = {
     beginDrag(props) {
         return {
-            id: props.id,
-            type: props.type
+            id: props.id
         };
     }
 };
@@ -53,61 +65,161 @@ const collect: DragSourceCollector = (connect, monitor) => {
     };
 };
 
-const Gene: React.SFC<GeneProps> = props => {
-    const classes = ['gene', 'tree-node'];
-    if (props.isDragging) {
-        classes.push('dragged');
+interface GeneState {
+    selection: OutputVariable;
+}
+
+class Gene extends React.Component<GeneProps, GeneState> {
+    public constructor(props: GeneProps) {
+        super(props);
+
+        this.state = {
+            selection: 'isAggressive'
+        };
+
+        this.handleChooseOutput = this.handleChooseOutput.bind(this);
+        this.handleSelectionChange = this.handleSelectionChange.bind(this);
     }
 
-    let condition;
-    let expression;
-    if (props.condition) {
-        const Type = getExpressionForOperator(props.condition.operator);
+    public render() {
+        const classes = ['gene', 'tree-node'];
+        if (this.props.isDragging) {
+            classes.push('dragged');
+        }
 
-        condition = (
-            <Type id={props.condition.id} />
-        );
-    } else {
-        condition = (
-            <BooleanExpressionConnector
-                isLeftChild={true}
-                parentId={props.gene.id}
-            />
-        );
-    }
+        let condition;
+        let expression;
+        let content;
 
-    if (props.expression) {
-        const Type = getExpressionForOperator(props.expression.operator);
+        if (this.props.gene.output) {
+            if (this.props.condition) {
+                const Type = getExpressionForOperator(
+                    this.props.condition.operator);
 
-        expression = (
-            <Type id={props.expression.id} />
-        );
-    } else {
-        expression = (
-            <RealExpressionConnector
-                isLeftChild={false}
-                parentId={props.gene.id}
-            />
-        );
-    }
+                condition = (
+                    <Type id={this.props.condition.id} />
+                );
+            } else {
+                condition = (
+                    <BooleanExpressionConnector
+                        isLeftChild={true}
+                        parentId={this.props.gene.id}
+                    />
+                );
+            }
 
-    return props.connectDragSource(
-        <div className={classes.join(' ')}>
-            <div className='tree-content'>
-                <div>
-                    Whenever
+            if (this.props.expression) {
+                const Type = getExpressionForOperator(
+                    this.props.expression.operator);
+
+                expression = (
+                    <Type id={this.props.expression.id} />
+                );
+            } else if (isBooleanVariable(this.props.gene.output)) {
+                expression = (
+                    <BooleanExpressionConnector
+                        isLeftChild={false}
+                        parentId={this.props.gene.id}
+                    />
+                );
+            } else {
+                expression = (
+                    <RealExpressionConnector
+                        isLeftChild={false}
+                        parentId={this.props.gene.id}
+                    />
+                );
+            }
+
+            content = (
+                <div className='tree-content'>
+                    <div>
+                        Whenever
+                    </div>
+                    <div>
+                        Set {this.props.gene.output} to
+                    </div>
                 </div>
-                <div>
-                    Set {props.id.id} to
+            );
+        } else {
+            classes.push('partial');
+
+            content = (
+                <div className='tree-content'>
+                    <div className='gene-output-chooser'>
+                        <label>
+                            <span>
+                                Choose an output:
+                            </span>
+                            <select
+                                onChange={this.handleSelectionChange}
+                                value={this.state.selection}
+                            >
+                                <option value='isAggressive'>
+                                    isAggressive
+                                </option>
+                                <option value='isMoving'>
+                                    isMoving
+                                </option>
+                                <option value='isFast'>
+                                    isFast
+                                </option>
+                                <option value='isRed'>
+                                    isRed
+                                </option>
+                                <option value='isGreen'>
+                                    isGreen
+                                </option>
+                                <option value='isBlue'>
+                                    isBlue
+                                </option>
+                                <option value='shouldDivide'>
+                                    shouldDivide
+                                </option>
+                                <option value='shouldMate'>
+                                    shouldMate
+                                </option>
+                                <option value='angularVelocity'>
+                                    angularVelocity
+                                </option>
+                            </select>
+                        </label>
+                        <button
+                            className='tree-node-choice-button'
+                            onClick={this.handleChooseOutput}
+                            type='button'
+                        >
+                            &#x2713;
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        return this.props.connectDragSource(
+            <div className={classes.join(' ')}>
+                {content}
+                <div className='connectors'>
+                    {condition}
+                    {expression}
                 </div>
             </div>
-            <div className='connectors'>
-                {condition}
-                {expression}
-            </div>
-        </div>
-    );
-};
+        );
+    }
+
+    private handleChooseOutput() {
+        this.props.onCompleteGene({
+            geneId: this.props.gene.id,
+            output: this.state.selection
+        });
+    }
+
+    private handleSelectionChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        this.setState({
+            selection: event.target.value as OutputVariable
+        });
+    }
+}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
     const gene = state.genes.get(ownProps.id) as GeneType;
@@ -125,5 +237,11 @@ const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
     };
 };
 
-export default reduxConnect<MappedProps, undefined, OwnProps>(mapStateToProps)(
+const mapDispatchToProps = (dispatch: Dispatch<State>): DispatchProps =>
+    bindActionCreators({
+        onCompleteGene: completeGene
+    },
+    dispatch);
+
+export default reduxConnect<MappedProps, DispatchProps, OwnProps>(mapStateToProps, mapDispatchToProps)(
     DragSource('gene', source, collect)(Gene));

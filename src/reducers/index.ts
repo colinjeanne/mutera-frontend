@@ -61,7 +61,32 @@ const makeGeneId = (): GeneId => {
     };
 };
 
-export const reducer = handleActions<State, Actions.DropExpressionPayload | Actions.DropGenePayload>({
+type Payloads =
+    Actions.CompleteGenePayload |
+    Actions.DropExpressionPayload |
+    Actions.DropGenePayload;
+
+export const reducer = handleActions<State, Payloads>({
+    completeGene: (state, action: Action<Actions.CompleteGenePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const gene = state.genes.get(action.payload.geneId) as Gene;
+        const updatedGene = {
+            ...gene,
+            output: action.payload.output
+        };
+
+        const updatedGenes = new Map(state.genes.entries());
+        updatedGenes.set(updatedGene.id, updatedGene);
+
+        return {
+            ...state,
+            genes: updatedGenes
+        };
+    },
+
     dropExpression: (state, action: Action<Actions.DropExpressionPayload>) => {
         if (!action.payload) {
             return state;
@@ -148,7 +173,7 @@ export const reducer = handleActions<State, Actions.DropExpressionPayload | Acti
                 };
             }
 
-            updatedGenes.set(parentId, updatedParent);
+            updatedGenes.set(parentId, updatedParent as Gene);
         } else {
             const parent = (updatedExpressions.get(parentId) as BinaryExpression | UnaryExpression);
             let updatedParent;

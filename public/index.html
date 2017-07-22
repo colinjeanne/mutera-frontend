@@ -24,6 +24,7 @@
                 flex-direction: column;
                 justify-content: flex-start;
 
+                box-sizing: border-box;
                 padding: 0 1em 1em;
                 height: 100%;
             }
@@ -73,6 +74,29 @@
                 height: 100%;
 
                 text-align: center;
+            }
+
+            .gene-output-chooser > label {
+                display: block;
+                margin-bottom: 1em;
+            }
+
+            .gene-output-chooser > label > select {
+                margin-top: 0.25em;
+            }
+
+            .tree-node-choice-button {
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                border: thin solid dimgray;
+                border-radius: 50%;
+                background-color: transparent;
+
+                font-size: 200%;
+            }
+
+            .tree-node-choice-button:hover {
+                background-color: palegreen;
             }
 
             .connectors {

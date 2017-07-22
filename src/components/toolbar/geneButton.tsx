@@ -6,22 +6,16 @@ import {
     DragSourceSpec
 } from 'react-dnd';
 
-interface GeneProps {
-    type?: string;
-}
-
 interface CollectedProps {
     connectDragSource: ConnectDragSource;
     isDragging: boolean;
 }
 
-type Props = GeneProps & CollectedProps;
+type Props = CollectedProps;
 
 const source: DragSourceSpec<Props> = {
     beginDrag() {
-        return {
-            type: 'gene'
-        };
+        return {};
     }
 };
 
@@ -46,4 +40,4 @@ const ToolbarButton: React.SFC<Props> = props => {
 };
 
 export const GeneButton =
-    DragSource<GeneProps>('gene', source, collect)(ToolbarButton);
+    DragSource<{}>('gene', source, collect)(ToolbarButton);
