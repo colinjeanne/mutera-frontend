@@ -9,19 +9,40 @@ interface BaseExpression {
     parentId: Id;
 }
 
-interface NullaryBooleanExpression extends BaseExpression {
+export interface BooleanVariableExpression extends BaseExpression {
     arity: 0;
-    data: boolean;
+    data?: string;
     id: BooleanExpressionId;
-    operator: 'B' | 'T';
+    operator: 'B';
 }
 
-interface NullaryRealExpression extends BaseExpression {
+export interface TrueExpression extends BaseExpression {
     arity: 0;
-    data: number;
-    id: RealExpressionId;
-    operator: 'C' | 'R';
+    id: BooleanExpressionId;
+    operator: 'T';
 }
+
+type NullaryBooleanExpression =
+    BooleanVariableExpression |
+    TrueExpression;
+
+export interface ConstantExpression extends BaseExpression {
+    arity: 0;
+    data?: number;
+    id: RealExpressionId;
+    operator: 'C';
+}
+
+export interface RealVariableExpression extends BaseExpression {
+    arity: 0;
+    data?: string;
+    id: RealExpressionId;
+    operator: 'R';
+}
+
+type NullaryRealExpression =
+    ConstantExpression |
+    RealVariableExpression;
 
 interface UnaryBooleanExpression extends BaseExpression {
     arity: 1;
@@ -64,5 +85,4 @@ export type Expression =
     NullaryBooleanExpression |
     NullaryRealExpression |
     UnaryExpression |
-    BinaryBooleanExpression |
-    BinaryRealExpression;
+    BinaryExpression;

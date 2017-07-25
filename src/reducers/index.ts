@@ -5,7 +5,10 @@ import {
 import * as Actions from './../actions/index';
 import {
     BinaryExpression,
+    BooleanVariableExpression,
+    ConstantExpression,
     Expression,
+    RealVariableExpression,
     UnaryExpression
 } from './../types/expression';
 import { Gene } from './../types/gene';
@@ -62,11 +65,56 @@ const makeGeneId = (): GeneId => {
 };
 
 type Payloads =
+    Actions.CompleteBooleanVariablePayload |
+    Actions.CompleteConstantPayload |
     Actions.CompleteGenePayload |
+    Actions.CompleteRealVariablePayload |
     Actions.DropExpressionPayload |
     Actions.DropGenePayload;
 
 export const reducer = handleActions<State, Payloads>({
+    completeBooleanVariable: (state, action: Action<Actions.CompleteBooleanVariablePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const expression = state.expressions.
+            get(action.payload.expressionId) as BooleanVariableExpression;
+        const updatedExpression = {
+            ...expression,
+            data: action.payload.variable
+        };
+
+        const updatedExpressions = new Map(state.expressions.entries());
+        updatedExpressions.set(updatedExpression.id, updatedExpression);
+
+        return {
+            ...state,
+            expressions: updatedExpressions
+        };
+    },
+
+    completeConstant: (state, action: Action<Actions.CompleteConstantPayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const expression = state.expressions.
+            get(action.payload.expressionId) as ConstantExpression;
+        const updatedExpression = {
+            ...expression,
+            data: action.payload.constant
+        };
+
+        const updatedExpressions = new Map(state.expressions.entries());
+        updatedExpressions.set(updatedExpression.id, updatedExpression);
+
+        return {
+            ...state,
+            expressions: updatedExpressions
+        };
+    },
+
     completeGene: (state, action: Action<Actions.CompleteGenePayload>) => {
         if (!action.payload) {
             return state;
@@ -84,6 +132,27 @@ export const reducer = handleActions<State, Payloads>({
         return {
             ...state,
             genes: updatedGenes
+        };
+    },
+
+    completeRealVariable: (state, action: Action<Actions.CompleteRealVariablePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const expression = state.expressions.
+            get(action.payload.expressionId) as RealVariableExpression;
+        const updatedExpression = {
+            ...expression,
+            data: action.payload.variable
+        };
+
+        const updatedExpressions = new Map(state.expressions.entries());
+        updatedExpressions.set(updatedExpression.id, updatedExpression);
+
+        return {
+            ...state,
+            expressions: updatedExpressions
         };
     },
 

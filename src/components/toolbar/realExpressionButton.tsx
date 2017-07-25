@@ -5,8 +5,10 @@ import {
     DragSourceCollector,
     DragSourceSpec
 } from 'react-dnd';
-import getOperatorData from './../../getOperatorData';
-import { RealOperator } from './../../types/operator';
+import {
+    getOperatorArity,
+    RealOperator
+} from './../../types/operator';
 
 interface ExpressionProps {
     operator: RealOperator;
@@ -21,9 +23,8 @@ type Props = ExpressionProps & CollectedProps;
 
 const source: DragSourceSpec<Props> = {
     beginDrag(props) {
-        const operatorData = getOperatorData(props.operator);
         return {
-            arity: operatorData.arity,
+            arity: getOperatorArity(props.operator),
             operator: props.operator
         };
     }

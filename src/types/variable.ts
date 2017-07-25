@@ -1,47 +1,63 @@
-type BooleanVariable =
-    'isAggressive' |
-    'isMoving' |
-    'isFast' |
-    'isRed' |
-    'isGreen' |
-    'isBlue' |
-    'shouldMate' |
-    'shouldDivide';
+export enum BooleanInputVariable {
+    isAggressive = 'isAggressive',
+    isBlue = 'isBlue',
+    isFast = 'isFast',
+    isGreen = 'isGreen',
+    isMoving = 'isMoving',
+    isRed = 'isRed',
+    nearestFocusCreatureIsBlue = 'nearestFocusCreatureIsBlue',
+    nearestFocusCreatureIsCarnivore = 'nearestFocusCreatureIsCarnivore',
+    nearestFocusCreatureIsGreen = 'nearestFocusCreatureIsGreen',
+    nearestFocusCreatureIsRed = 'nearestFocusCreatureIsRed',
+    nearestLeftCreatureIsBlue = 'nearestLeftCreatureIsBlue',
+    nearestLeftCreatureIsCarnivore = 'nearestLeftCreatureIsCarnivore',
+    nearestLeftCreatureIsGreen = 'nearestLeftCreatureIsGreen',
+    nearestLeftCreatureIsRed = 'nearestLeftCreatureIsRed',
+    nearestRightCreatureIsBlue = 'nearestRightCreatureIsBlue',
+    nearestRightCreatureIsCarnivore = 'nearestRightCreatureIsCarnivore',
+    nearestRightCreatureIsGreen = 'nearestRightCreatureIsGreen',
+    nearestRightCreatureIsRed = 'nearestRightCreatureIsRed',
+    shouldDivide = 'shouldDivide',
+    shouldMate = 'shouldMate'
+}
 
-export type BooleanInputVariable = BooleanVariable;
-type BooleanOutputVariable = BooleanVariable;
+export enum BooleanOutputVariable {
+    isAggressive = 'isAggressive',
+    isBlue = 'isBlue',
+    isFast = 'isFast',
+    isGreen = 'isGreen',
+    isMoving = 'isMoving',
+    isRed = 'isRed',
+    shouldDivide = 'shouldDivide',
+    shouldMate = 'shouldMate'
+}
 
-export type RealInputVariable =
-    'age' |
-    'angle' |
-    'health' |
-    'speed' |
-    'nearestLeftPeripheryFoodDistance' |
-    'nearestRightPeripheryFoodDistance' |
-    'nearestFocusFoodDistance' |
-    'nearestLeftCreatureDistance' |
-    'nearestLeftCreatureIsRed' |
-    'nearestLeftCreatureIsGreen' |
-    'nearestLeftCreatureIsBlue' |
-    'nearestLeftCreatureIsCarnivore' |
-    'nearestRightCreatureDistance' |
-    'nearestRightCreatureIsRed' |
-    'nearestRightCreatureIsGreen' |
-    'nearestRightCreatureIsBlue' |
-    'nearestRightCreatureIsCarnivore' |
-    'nearestFocusCreatureDistance' |
-    'nearestFocusCreatureIsRed' |
-    'nearestFocusCreatureIsGreen' |
-    'nearestFocusCreatureIsBlue' |
-    'nearestFocusCreatureIsCarnivore' |
-    'frontSound' |
-    'leftSound' |
-    'backSound' |
-    'rightSound' |
-    'x' |
-    'y';
+type BooleanVariable = BooleanInputVariable | BooleanOutputVariable;
 
-type RealOutputVariable = 'angularVelocity';
+export enum RealInputVariable {
+    age = 'age',
+    angle = 'angle',
+    angularVelocity = 'angularVelocity',
+    health = 'health',
+    speed = 'speed',
+    nearestLeftPeripheryFoodDistance = 'nearestLeftPeripheryFoodDistance',
+    nearestRightPeripheryFoodDistance = 'nearestRightPeripheryFoodDistance',
+    nearestFocusFoodDistance = 'nearestFocusFoodDistance',
+    nearestLeftCreatureDistance = 'nearestLeftCreatureDistance',
+    nearestRightCreatureDistance = 'nearestRightCreatureDistance',
+    nearestFocusCreatureDistance = 'nearestFocusCreatureDistance',
+    frontSound = 'frontSound',
+    leftSound = 'leftSound',
+    backSound = 'backSound',
+    rightSound = 'rightSound',
+    x = 'x',
+    y = 'y'
+}
+
+export enum RealOutputVariable {
+    angularVelocity = 'angularVelocity'
+}
+
 type RealVariable = RealInputVariable | RealOutputVariable;
 
 export type OutputVariable = BooleanOutputVariable | RealOutputVariable;
@@ -49,14 +65,7 @@ export type OutputVariable = BooleanOutputVariable | RealOutputVariable;
 type Variable = BooleanVariable | RealVariable;
 
 export const isBooleanVariable = (v: Variable): v is BooleanVariable =>
-    (v === 'isAggressive') ||
-    (v === 'isMoving') ||
-    (v === 'isFast') ||
-    (v === 'isRed') ||
-    (v === 'isGreen') ||
-    (v === 'isBlue') ||
-    (v === 'shouldMate') ||
-    (v === 'shouldDivide');
+    (v in BooleanInputVariable);
 
 export const isRealVariable = (v: Variable): v is RealVariable =>
     !isBooleanVariable(v);

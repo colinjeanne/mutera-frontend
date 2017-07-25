@@ -20,14 +20,13 @@ import { Gene as GeneType } from './../types/gene';
 import { GeneId } from './../types/id';
 import { State } from './../types/state';
 import {
+    BooleanOutputVariable,
     isBooleanVariable,
-    OutputVariable
+    OutputVariable,
+    RealOutputVariable
 } from './../types/variable';
-import {
-    BooleanExpressionConnector,
-    RealExpressionConnector
-} from './connector';
-import { getExpressionForOperator } from './expression';
+import Chooser from './chooser';
+import TreeConnector from './treeConnector';
 
 interface OwnProps {
     id: GeneId;
@@ -65,20 +64,11 @@ const collect: DragSourceCollector = (connect, monitor) => {
     };
 };
 
-interface GeneState {
-    selection: OutputVariable;
-}
-
-class Gene extends React.Component<GeneProps, GeneState> {
+class Gene extends React.Component<GeneProps> {
     public constructor(props: GeneProps) {
         super(props);
 
-        this.state = {
-            selection: 'isAggressive'
-        };
-
-        this.handleChooseOutput = this.handleChooseOutput.bind(this);
-        this.handleSelectionChange = this.handleSelectionChange.bind(this);
+        this.handleChoose = this.handleChoose.bind(this);
     }
 
     public render() {
@@ -87,52 +77,28 @@ class Gene extends React.Component<GeneProps, GeneState> {
             classes.push('dragged');
         }
 
-        let condition;
-        let expression;
+        let connector;
         let content;
 
         if (this.props.gene.output) {
-            if (this.props.condition) {
-                const Type = getExpressionForOperator(
-                    this.props.condition.operator);
+            const expressionConnectorType =
+                isBooleanVariable(this.props.gene.output) ?
+                'boolean' :
+                'real';
 
-                condition = (
-                    <Type id={this.props.condition.id} />
-                );
-            } else {
-                condition = (
-                    <BooleanExpressionConnector
-                        isLeftChild={true}
-                        parentId={this.props.gene.id}
-                    />
-                );
-            }
-
-            if (this.props.expression) {
-                const Type = getExpressionForOperator(
-                    this.props.expression.operator);
-
-                expression = (
-                    <Type id={this.props.expression.id} />
-                );
-            } else if (isBooleanVariable(this.props.gene.output)) {
-                expression = (
-                    <BooleanExpressionConnector
-                        isLeftChild={false}
-                        parentId={this.props.gene.id}
-                    />
-                );
-            } else {
-                expression = (
-                    <RealExpressionConnector
-                        isLeftChild={false}
-                        parentId={this.props.gene.id}
-                    />
-                );
-            }
+            connector = (
+                <TreeConnector
+                    arity={2}
+                    id={this.props.id}
+                    leftChild={this.props.condition}
+                    leftConnectorType='boolean'
+                    rightChild={this.props.expression}
+                    rightConnectorType={expressionConnectorType}
+                />
+            );
 
             content = (
-                <div className='tree-content'>
+                <div>
                     <div>
                         Whenever
                     </div>
@@ -144,79 +110,43 @@ class Gene extends React.Component<GeneProps, GeneState> {
         } else {
             classes.push('partial');
 
+            const options = [];
+            for (const variable in BooleanOutputVariable) {
+                if (variable) {
+                    options.push(variable);
+                }
+            }
+
+            for (const variable in RealOutputVariable) {
+                if (variable) {
+                    options.push(variable);
+                }
+            }
+
             content = (
-                <div className='tree-content'>
-                    <div className='gene-output-chooser'>
-                        <label>
-                            <span>
-                                Choose an output:
-                            </span>
-                            <select
-                                onChange={this.handleSelectionChange}
-                                value={this.state.selection}
-                            >
-                                <option value='isAggressive'>
-                                    isAggressive
-                                </option>
-                                <option value='isMoving'>
-                                    isMoving
-                                </option>
-                                <option value='isFast'>
-                                    isFast
-                                </option>
-                                <option value='isRed'>
-                                    isRed
-                                </option>
-                                <option value='isGreen'>
-                                    isGreen
-                                </option>
-                                <option value='isBlue'>
-                                    isBlue
-                                </option>
-                                <option value='shouldDivide'>
-                                    shouldDivide
-                                </option>
-                                <option value='shouldMate'>
-                                    shouldMate
-                                </option>
-                                <option value='angularVelocity'>
-                                    angularVelocity
-                                </option>
-                            </select>
-                        </label>
-                        <button
-                            className='tree-node-choice-button'
-                            onClick={this.handleChooseOutput}
-                            type='button'
-                        >
-                            &#x2713;
-                        </button>
-                    </div>
-                </div>
+                <Chooser
+                    defaultIndex={0}
+                    label='Choose an output'
+                    onChoose={this.handleChoose}
+                    options={options}
+                />
             );
         }
 
         return this.props.connectDragSource(
             <div className={classes.join(' ')}>
-                {content}
-                <div className='connectors'>
-                    {condition}
-                    {expression}
+                <div className='tree-content'>
+                    {content}
                 </div>
+                {connector}
             </div>
         );
     }
 
-    private handleChooseOutput() {
+    private handleChoose(choice: string) {
         this.props.onCompleteGene({
             geneId: this.props.gene.id,
-            output: this.state.selection
-        });
-    }
-
-    private handleSelectionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        this.setState({
-            selection: event.target.value as OutputVariable
+            output: choice as OutputVariable
         });
     }
 }
