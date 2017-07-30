@@ -7,11 +7,15 @@ import {
     Id,
     RealExpressionId
 } from './../types/id';
-import { OutputVariable } from './../types/variable';
+import {
+    BooleanInputVariable,
+    OutputVariable,
+    RealInputVariable
+} from './../types/variable';
 
 export interface CompleteBooleanVariablePayload {
     expressionId: BooleanExpressionId;
-    variable: string;
+    variable: BooleanInputVariable;
 }
 
 export const completeBooleanVariable =
@@ -34,7 +38,7 @@ export const completeGene = createAction<CompleteGenePayload>('completeGene');
 
 export interface CompleteRealVariablePayload {
     expressionId: RealExpressionId;
-    variable: string;
+    variable: RealInputVariable;
 }
 
 export const completeRealVariable =

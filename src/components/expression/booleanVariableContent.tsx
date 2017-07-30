@@ -13,7 +13,10 @@ import { BooleanVariableExpression } from './../../types/expression';
 import { BooleanExpressionId } from './../../types/id';
 import { State } from './../../types/state';
 import { BooleanInputVariable } from './../../types/variable';
-import Chooser from './../chooser';
+import {
+    Choice,
+    Chooser
+} from './../chooser';
 import { BooleanExpression } from './expression';
 
 interface OwnProps {
@@ -34,10 +37,13 @@ class BooleanVariableContent extends React.Component<Props> {
     }
 
     public render() {
-        const options = [];
+        const options: Choice[] = [];
         for (const variable in BooleanInputVariable) {
             if (variable) {
-                options.push(variable);
+                options.push({
+                    display: BooleanInputVariable[variable],
+                    value: variable
+                });
             }
         }
 
@@ -56,7 +62,7 @@ class BooleanVariableContent extends React.Component<Props> {
     private handleChoose(choice: string) {
         this.props.onCompleteBooleanVariable({
             expressionId: this.props.expression.id as BooleanExpressionId,
-            variable: choice
+            variable: choice as BooleanInputVariable
         });
     }
 }

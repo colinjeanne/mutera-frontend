@@ -2,6 +2,11 @@ import * as React from 'react';
 import { Expression } from './../../types/expression';
 import { isBooleanOperator } from './../../types/operator';
 import {
+    BooleanInputVariable,
+    displayName,
+    RealInputVariable
+} from './../../types/variable';
+import {
     BooleanExpression,
     RealExpression
 } from './expression';
@@ -15,12 +20,17 @@ interface Props {
 const expressionContent = (expression: Expression): string => {
     switch (expression.operator) {
         case 'A':
-            return 'AND';
+            return 'and';
 
         case 'B':
         {
-            const data = expression.data as string;
-            return data;
+            const variable = expression.data as BooleanInputVariable;
+            let text = displayName(variable);
+            if (!variable.startsWith('nearest')) {
+                text = `I am ${text}`;
+            }
+
+            return text;
         }
 
         case 'C':
@@ -42,17 +52,17 @@ const expressionContent = (expression: Expression): string => {
             return 'multiplied by';
 
         case 'N':
-            return 'NOT';
+            return 'not';
 
         case 'O':
-            return 'OR';
+            return 'or';
 
         case 'P':
             return 'plus';
 
         case 'R':
         {
-            const data = expression.data as string;
+            const data = displayName(expression.data as RealInputVariable);
             return data;
         }
 

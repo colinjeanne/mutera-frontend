@@ -1,10 +1,15 @@
 import * as React from 'react';
 
+export interface Choice {
+    display: string;
+    value: string;
+}
+
 interface Props {
     defaultIndex: number;
     label: string;
     onChoose: (choice: string, index: number) => void;
-    options: string[];
+    options: Choice[];
 }
 
 interface State {
@@ -12,13 +17,13 @@ interface State {
     selection: string;
 }
 
-export default class Chooser extends React.Component<Props, State> {
+export class Chooser extends React.Component<Props, State> {
     public constructor(props: Props) {
         super(props);
 
         this.state = {
             index: props.defaultIndex,
-            selection: props.options[props.defaultIndex]
+            selection: props.options[props.defaultIndex].value
         };
 
         this.handleChooseOutput = this.handleChooseOutput.bind(this);
@@ -27,8 +32,8 @@ export default class Chooser extends React.Component<Props, State> {
 
     public render() {
         const options = this.props.options.map(option => (
-            <option value={option} key={option}>
-                {option}
+            <option value={option.value} key={option.value}>
+                {option.display}
             </option>
         ));
 

@@ -13,7 +13,10 @@ import { RealVariableExpression } from './../../types/expression';
 import { RealExpressionId } from './../../types/id';
 import { State } from './../../types/state';
 import { RealInputVariable } from './../../types/variable';
-import Chooser from './../chooser';
+import {
+    Choice,
+    Chooser
+} from './../chooser';
 import { RealExpression } from './expression';
 
 interface OwnProps {
@@ -34,10 +37,13 @@ class RealVariableContent extends React.Component<Props> {
     }
 
     public render() {
-        const options = [];
+        const options: Choice[] = [];
         for (const variable in RealInputVariable) {
             if (variable) {
-                options.push(variable);
+                options.push({
+                    display: RealInputVariable[variable],
+                    value: variable
+                });
             }
         }
 
@@ -56,7 +62,7 @@ class RealVariableContent extends React.Component<Props> {
     private handleChoose(choice: string) {
         this.props.onCompleteRealVariable({
             expressionId: this.props.expression.id as RealExpressionId,
-            variable: choice
+            variable: choice as RealInputVariable
         });
     }
 }

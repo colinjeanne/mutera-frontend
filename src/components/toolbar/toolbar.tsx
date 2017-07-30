@@ -30,13 +30,13 @@ class EditorToolbar extends React.Component {
                 </Group>
                 <Group label='Logic'>
                     <BooleanExpressionButton operator='A'>
-                        AND
+                        And
                     </BooleanExpressionButton>
                     <BooleanExpressionButton operator='O'>
-                        OR
+                        Or
                     </BooleanExpressionButton>
                     <BooleanExpressionButton operator='N'>
-                        NOT
+                        Not
                     </BooleanExpressionButton>
                     <BooleanExpressionButton operator='T'>
                         True

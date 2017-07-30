@@ -21,11 +21,15 @@ import { GeneId } from './../types/id';
 import { State } from './../types/state';
 import {
     BooleanOutputVariable,
+    displayName,
     isBooleanVariable,
     OutputVariable,
     RealOutputVariable
 } from './../types/variable';
-import Chooser from './chooser';
+import {
+    Choice,
+    Chooser
+} from './chooser';
 import TreeConnector from './treeConnector';
 
 interface OwnProps {
@@ -97,29 +101,46 @@ class Gene extends React.Component<GeneProps> {
                 />
             );
 
+            const displayOutput = displayName(this.props.gene.output);
+            const output = isBooleanVariable(this.props.gene.output) ?
+                (
+                    <div>
+                        then I should be {displayOutput} if
+                    </div>
+                ) :
+                (
+                    <div>
+                        then {displayOutput} is
+                    </div>
+                );
+
             content = (
                 <div>
                     <div>
-                        Whenever
+                        If
                     </div>
-                    <div>
-                        Set {this.props.gene.output} to
-                    </div>
+                    {output}
                 </div>
             );
         } else {
             classes.push('partial');
 
-            const options = [];
+            const options: Choice[] = [];
             for (const variable in BooleanOutputVariable) {
                 if (variable) {
-                    options.push(variable);
+                    options.push({
+                        display: BooleanOutputVariable[variable],
+                        value: variable
+                    });
                 }
             }
 
             for (const variable in RealOutputVariable) {
                 if (variable) {
-                    options.push(variable);
+                    options.push({
+                        display: RealOutputVariable[variable],
+                        value: variable
+                    });
                 }
             }
 

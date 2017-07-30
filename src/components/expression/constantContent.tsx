@@ -12,7 +12,10 @@ import {
 import { ConstantExpression } from './../../types/expression';
 import { RealExpressionId } from './../../types/id';
 import { State } from './../../types/state';
-import Chooser from './../chooser';
+import {
+    Choice,
+    Chooser
+} from './../chooser';
 import { BooleanExpression } from './expression';
 
 interface OwnProps {
@@ -33,9 +36,13 @@ class ConstantContent extends React.Component<Props> {
     }
 
     public render() {
-        const options = [];
+        const options: Choice[] = [];
         for (let i = -4; i < 4; i += 0.125) {
-            options.push(i.toFixed(3));
+            const fixed = i.toFixed(3);
+            options.push({
+                display: fixed,
+                value: fixed
+            });
         }
 
         return (

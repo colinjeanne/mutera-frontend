@@ -3,6 +3,10 @@ import {
     Id,
     RealExpressionId
 } from './id';
+import {
+    BooleanInputVariable,
+    RealInputVariable
+} from './variable';
 
 interface BaseExpression {
     operator: string;
@@ -11,7 +15,7 @@ interface BaseExpression {
 
 export interface BooleanVariableExpression extends BaseExpression {
     arity: 0;
-    data?: string;
+    data?: BooleanInputVariable;
     id: BooleanExpressionId;
     operator: 'B';
 }
@@ -35,7 +39,7 @@ export interface ConstantExpression extends BaseExpression {
 
 export interface RealVariableExpression extends BaseExpression {
     arity: 0;
-    data?: string;
+    data?: RealInputVariable;
     id: RealExpressionId;
     operator: 'R';
 }
