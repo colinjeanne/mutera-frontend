@@ -25,161 +25,130 @@
                 justify-content: flex-start;
 
                 box-sizing: border-box;
-                padding: 0 1em 1em;
+                padding: 1em;
                 height: 100%;
             }
 
-            .hovered {
-                background-color: red;
-            }
-
-            .gene-drop-target {
-                padding: 0 0.5em;
-            }
-
-            .gene-drop-target hr {
-                border: 0;
-                border-bottom: thin dashed transparent;
-            }
-
-            .gene-drop-target.hovered {
-                background-color: transparent;
-            }
-
-            .gene-drop-target.hovered hr {
-                border-bottom: thin dashed dimgray;
-            }
-
-            .tree-node {
-                cursor: grab;
-
+            .editors {
+                flex-grow: 1;
                 display: flex;
-                justify-content: end;
-
-                position: relative;
-                width: 9em;
-                min-height: 9em;
             }
 
-            .tree-content {
-                border: thin solid black;
-                border-radius: 10px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-
-                position: absolute;
-                box-sizing: border-box;
-                width: 100%;
-                height: 100%;
-
-                text-align: center;
-            }
-
-            .tree-chooser > label {
-                display: block;
-                margin-bottom: 1em;
-            }
-
-            .tree-chooser > label > select {
-                margin-top: 0.25em;
-                max-width: 100%;
-            }
-
-            .tree-node-choice-button {
+            .gene-insertion-point {
                 -moz-appearance: none;
                 -webkit-appearance: none;
-                border: thin solid dimgray;
-                border-radius: 50%;
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+
+                border: none;
                 background-color: transparent;
 
-                font-size: 200%;
+                opacity: 0.01;
+
+                padding: 0.25em 0;
             }
 
-            .tree-node-choice-button:hover {
-                background-color: palegreen;
+            .gene-insertion-point:hover, .gene-insertion-point:only-of-type {
+                opacity: 0.75;
             }
 
-            .connectors {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-
-                position: relative;
-                width: 3em;
-                height: 100%;
-                left: 2em;
-            }
-
-            .connector {
-                border: thin solid black;
-
-                width: 3em;
-                height: 3em;
-            }
-
-            .editor-toolbar {
-                background: white;
-
-                position: fixed;
-                z-index: 1;
-
-                padding-top: 1em;
-            }
-
-            .toolbar-group {
-                border-left: thin solid black;
-                display: inline-block;
-
+            .gene-insertion-point span {
                 padding: 0 1em;
             }
 
-            .toolbar-group:last-of-type {
-                border-right: thin solid black;
+            .gene-insertion-point::before, .gene-insertion-point::after {
+                position: absolute;
+                top: 51%;
+                overflow: hidden;
+                width: 50%;
+                height: 1px;
+                content: '\a0';
+                border-top: 1px dashed dimgray;
             }
 
-            .toolbar-group-label {
-                font-size: 1.2em;
-            }
-
-            .toolbar-group-items {
-                display: flex;
-                margin-top: 0.25em;
-            }
-
-            .toolbar-button {
-                cursor: grab;
-
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-
-                border: thin solid black;
-                border-radius: 5px;
-
-                box-sizing: border-box;
-                min-width: 3em;
-                height: 3em;
-                padding: 0 0.5em;
-                margin-right: 0.5em;
-
-                text-align: center;
-            }
-
-            .toolbar-button:last-of-type {
-                margin-right: 0;
+            .gene-insertion-point::before {
+                margin-left: -50%;
+                text-align: right;
             }
 
             .gene-editor {
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
                 flex-grow: 1;
-                margin-top: 5.75em;
+                padding-right: 1em;
             }
 
             .gene-editor > :last-child {
                 flex-grow: 1;
+            }
+
+            .gene {
+                display: flex;
+            }
+
+            .gene-controls {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .gene > textarea {
+                flex-grow: 1;
+                box-sizing: border-box;
+                width: 100%;
+                font-size: 100%;
+            }
+
+            .variable-editor {
+                max-width: 24em;
+                min-width: 24em;
+            }
+
+            .variable-list {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .variable-list:first-of-type {
+                margin-bottom: 2em;
+            }
+
+            .variable-list thead {
+                display: block;
+            }
+
+            .variable-list thead td {
+                font-weight: bold;
+                font-size: 120%;
+            }
+
+            .variable-list tbody {
+                display: block;
+                max-height: 25vh;
+                overflow-y: auto;
+                border: 1px inset darkgray;
+            }
+
+            .variable-list td:first-of-type {
+                padding: 0 1em;
+                width: 3em;
+            }
+
+            .variable-list td:last-of-type {
+                padding: 0 1em 0 0;
+            }
+
+            .variable-list tr {
+                display: block;
+                cursor: pointer;
+                line-height: 1.5;
+            }
+
+            .variable-list tbody tr:hover {
+                background: whitesmoke;
+            }
+
+            .variable-list caption {
+                font-size: 150%;
+                font-family: sans-serif;
             }
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"></script>

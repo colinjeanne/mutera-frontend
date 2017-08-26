@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Gene as GeneType } from './../types/gene';
-import { GeneId } from './../types/id';
 import { State } from './../types/state';
 import Gene from './gene';
 import GeneInsertionPoint from './geneInsertionPoint';
 
 interface EditorProps {
-    genes: GeneType[];
+    genes: ReadonlyArray<string>;
 }
 
 const editor: React.SFC<EditorProps> = props => {
-    const children = props.genes.reduce<JSX.Element[]>((aggregate, gene, index) => {
+    const children = props.genes.reduce<JSX.Element[]>((aggregate, id, index) => {
         aggregate.push(
             <GeneInsertionPoint
                 index={index}
@@ -19,8 +17,8 @@ const editor: React.SFC<EditorProps> = props => {
             />);
         aggregate.push(
             <Gene
-                id={gene.id}
-                key={gene.id.type + gene.id.id}
+                id={id}
+                key={id}
             />);
         return aggregate;
     }, []);
@@ -39,8 +37,7 @@ const editor: React.SFC<EditorProps> = props => {
 };
 
 const mapStateToProps = (state: State) => ({
-    genes: state.order.map(
-        (geneId: GeneId) => state.genes.get(geneId) as GeneType)
+    genes: state.order
 });
 
 export default connect(mapStateToProps)(editor);

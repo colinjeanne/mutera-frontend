@@ -1,198 +1,136 @@
 import * as React from 'react';
-import {
-    ConnectDragSource,
-    DragSource,
-    DragSourceCollector,
-    DragSourceSpec
-} from 'react-dnd';
-import { connect as reduxConnect } from 'react-redux';
+import { connect } from 'react-redux';
 import {
     Action,
     bindActionCreators,
     Dispatch
 } from 'redux';
 import {
-    completeGene,
-    CompleteGenePayload
+    shiftGene,
+    ShiftGenePayload,
+    updateGene,
+    UpdateGenePayload
 } from './../actions/index';
-import { Expression } from './../types/expression';
-import { Gene as GeneType } from './../types/gene';
-import { GeneId } from './../types/id';
-import { State } from './../types/state';
+import parse, { VariableTypes } from './../language/parse';
 import {
-    BooleanOutputVariable,
-    displayName,
-    isBooleanVariable,
-    OutputVariable,
-    RealOutputVariable
-} from './../types/variable';
-import {
-    Choice,
-    Chooser
-} from './chooser';
-import TreeConnector from './treeConnector';
+    State,
+    Variable
+} from './../types/state';
 
 interface OwnProps {
-    id: GeneId;
+    id: string;
 }
 
 interface MappedProps {
-    condition?: Expression;
-    expression?: Expression;
-    gene: GeneType;
+    inputVariables: VariableTypes;
+    isFirst: boolean;
+    isLast: boolean;
+    outputVariables: VariableTypes;
+    text: string;
 }
 
 interface DispatchProps {
-    onCompleteGene: (s: CompleteGenePayload) => Action;
+    onShiftGene: (s: ShiftGenePayload) => Action;
+    onUpdateGene: (s: UpdateGenePayload) => Action;
 }
 
-interface CollectedProps {
-    connectDragSource: ConnectDragSource;
-    isDragging: boolean;
-}
-
-type GeneProps = OwnProps & MappedProps & CollectedProps & DispatchProps;
-
-const source: DragSourceSpec<GeneProps> = {
-    beginDrag(props) {
-        return {
-            id: props.id
-        };
-    }
-};
-
-const collect: DragSourceCollector = (connect, monitor) => {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    };
-};
+type GeneProps = OwnProps & MappedProps & DispatchProps;
 
 class Gene extends React.Component<GeneProps> {
-    public constructor(props: GeneProps) {
-        super(props);
-
-        this.handleChoose = this.handleChoose.bind(this);
-    }
-
     public render() {
-        const classes = ['gene', 'tree-node'];
-        if (this.props.isDragging) {
-            classes.push('dragged');
-        }
-
-        let connector;
-        let content;
-
-        if (this.props.gene.output) {
-            const expressionConnectorType =
-                isBooleanVariable(this.props.gene.output) ?
-                'boolean' :
-                'real';
-
-            connector = (
-                <TreeConnector
-                    arity={2}
-                    id={this.props.id}
-                    leftChild={this.props.condition}
-                    leftConnectorType='boolean'
-                    rightChild={this.props.expression}
-                    rightConnectorType={expressionConnectorType}
-                />
-            );
-
-            const displayOutput = displayName(this.props.gene.output);
-            const output = isBooleanVariable(this.props.gene.output) ?
-                (
-                    <div>
-                        then I should be {displayOutput} if
-                    </div>
-                ) :
-                (
-                    <div>
-                        then {displayOutput} is
-                    </div>
-                );
-
-            content = (
-                <div>
-                    <div>
-                        If
-                    </div>
-                    {output}
+        return (
+            <div className='gene'>
+                <div className='gene-controls'>
+                    <button
+                        disabled={this.props.isFirst}
+                        onClick={this.onShiftUp}
+                    >
+                        {'\u25b2'}
+                    </button>
+                    <button
+                        disabled={this.props.isLast}
+                        onClick={this.onShiftDown}
+                    >
+                        {'\u25bc'}
+                    </button>
                 </div>
-            );
-        } else {
-            classes.push('partial');
-
-            const options: Choice[] = [];
-            for (const variable in BooleanOutputVariable) {
-                if (variable) {
-                    options.push({
-                        display: BooleanOutputVariable[variable],
-                        value: variable
-                    });
-                }
-            }
-
-            for (const variable in RealOutputVariable) {
-                if (variable) {
-                    options.push({
-                        display: RealOutputVariable[variable],
-                        value: variable
-                    });
-                }
-            }
-
-            content = (
-                <Chooser
-                    defaultIndex={0}
-                    label='Choose an output'
-                    onChoose={this.handleChoose}
-                    options={options}
+                <textarea
+                    autoComplete='off'
+                    onChange={this.onChange}
+                    rows={3}
+                    spellCheck={false}
+                    value={this.props.text}
                 />
-            );
-        }
-
-        return this.props.connectDragSource(
-            <div className={classes.join(' ')}>
-                <div className='tree-content'>
-                    {content}
-                </div>
-                {connector}
             </div>
         );
     }
 
-    private handleChoose(choice: string) {
-        this.props.onCompleteGene({
-            geneId: this.props.gene.id,
-            output: choice as OutputVariable
+    private onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const text = event.target.value;
+
+        try {
+            parse(text, this.props.inputVariables, this.props.outputVariables);
+            event.target.setCustomValidity('');
+        } catch (e) {
+            event.target.setCustomValidity(e.message);
+        }
+
+        this.props.onUpdateGene({
+            id: this.props.id,
+            text
+        });
+    }
+
+    private onShiftDown = () => {
+        this.props.onShiftGene({
+            direction: 'down',
+            id: this.props.id
+        });
+    }
+
+    private onShiftUp = () => {
+        this.props.onShiftGene({
+            direction: 'up',
+            id: this.props.id
         });
     }
 }
 
-const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
-    const gene = state.genes.get(ownProps.id) as GeneType;
-    const condition = gene.conditionId ?
-        state.expressions.get(gene.conditionId) :
-        undefined;
-    const expression = gene.expressionId ?
-        state.expressions.get(gene.expressionId) :
-        undefined;
+const selectVariablesByType = (
+    variables: ReadonlyArray<Variable>,
+    type: 'input' | 'output'
+) => {
+    const variableTypes: VariableTypes = {};
+    for (const [name, variableType, dataType] of variables) {
+        if (type === variableType) {
+            variableTypes[name.toLowerCase()] = dataType;
+        }
+    }
 
+    return variableTypes;
+};
+
+const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
+    const isFirst = state.order[0] === ownProps.id;
+    const isLast = state.order[state.order.length - 1] === ownProps.id;
+    const text = state.genes.get(ownProps.id) as string;
     return {
-        condition,
-        expression,
-        gene
+        inputVariables: selectVariablesByType(state.variables, 'input'),
+        isFirst,
+        isLast,
+        outputVariables: selectVariablesByType(state.variables, 'output'),
+        text
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): DispatchProps =>
     bindActionCreators({
-        onCompleteGene: completeGene
+        onShiftGene: shiftGene,
+        onUpdateGene: updateGene
     },
     dispatch);
 
-export default reduxConnect<MappedProps, DispatchProps, OwnProps>(mapStateToProps, mapDispatchToProps)(
-    DragSource('gene', source, collect)(Gene));
+export default connect<MappedProps, DispatchProps, OwnProps>(
+    mapStateToProps,
+    mapDispatchToProps
+)(Gene);

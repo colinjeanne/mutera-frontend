@@ -1,61 +1,37 @@
 import { createAction } from 'redux-actions';
-import { Expression } from './../types/expression';
-import { Gene } from './../types/gene';
-import {
-    BooleanExpressionId,
-    GeneId,
-    Id,
-    RealExpressionId
-} from './../types/id';
-import {
-    BooleanInputVariable,
-    OutputVariable,
-    RealInputVariable
-} from './../types/variable';
 
-export interface CompleteBooleanVariablePayload {
-    expressionId: BooleanExpressionId;
-    variable: BooleanInputVariable;
+export interface AddVariablePayload {
+    dataType: 'boolean' | 'real';
+    type: 'input' | 'output';
+    name: string;
 }
 
-export const completeBooleanVariable =
-    createAction<CompleteBooleanVariablePayload>('completeBooleanVariable');
+export const addVariable = createAction<AddVariablePayload>('addVariable');
 
-export interface CompleteConstantPayload {
-    constant: number;
-    expressionId: RealExpressionId;
-}
-
-export const completeConstant =
-    createAction<CompleteConstantPayload>('completeConstant');
-
-export interface CompleteGenePayload {
-    geneId: GeneId;
-    output: OutputVariable;
-}
-
-export const completeGene = createAction<CompleteGenePayload>('completeGene');
-
-export interface CompleteRealVariablePayload {
-    expressionId: RealExpressionId;
-    variable: RealInputVariable;
-}
-
-export const completeRealVariable =
-    createAction<CompleteRealVariablePayload>('completeRealVariable');
-
-export interface DropGenePayload {
-    gene: Gene;
+export interface InsertGenePayload {
     index: number;
 }
 
-export const dropGene = createAction<DropGenePayload>('dropGene');
+export const insertGene = createAction<InsertGenePayload>('insertGene');
 
-export interface DropExpressionPayload {
-    isLeftChild: boolean;
-    expression: Expression;
-    parentId: Id;
+export interface ShiftGenePayload {
+    direction: 'up' | 'down';
+    id: string;
 }
 
-export const dropExpression =
-    createAction<DropExpressionPayload>('dropExpression');
+export const shiftGene = createAction<ShiftGenePayload>('shiftGene');
+
+export interface RemoveVariablePayload {
+    name: string;
+    type: 'input' | 'output';
+}
+
+export const removeVariable =
+    createAction<RemoveVariablePayload>('removeVariable');
+
+export const updateGene = createAction('updateGene');
+
+export interface UpdateGenePayload {
+    id: string;
+    text: string;
+}
