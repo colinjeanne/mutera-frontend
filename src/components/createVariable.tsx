@@ -12,6 +12,8 @@ import {
 import { State } from './../types/state';
 import { Variable } from './../types/variable';
 
+const MAXIMUM_VARIABLE_COUNT = 64;
+
 interface MappedProps {
     booleanVariableCount: number;
     existingNames: string[];
@@ -53,18 +55,35 @@ class CreateVariable extends React.Component<Props, CreateVariableState> {
     }
 
     public render() {
+        const isBooleanDisabled =
+            this.props.booleanVariableCount === MAXIMUM_VARIABLE_COUNT;
+        const isNumberDisabled =
+            this.props.realVariableCount === MAXIMUM_VARIABLE_COUNT;
+
         return (
             <div className='create-variable'>
                 <div className='create-variable-title'>Add Variable</div>
                 <div className='create-variable-details'>
                     <select
+                        disabled={isBooleanDisabled && isNumberDisabled}
                         onChange={this.onSelectDataType}
                         value={this.state.dataType}
                     >
-                        <option value='real'>Number</option>
-                        <option value='boolean'>Boolean</option>
+                        <option
+                            disabled={isNumberDisabled}
+                            value='real'
+                        >
+                            Number
+                        </option>
+                        <option
+                            disabled={isBooleanDisabled}
+                            value='boolean'
+                        >
+                            Boolean
+                        </option>
                     </select>
                     <input
+                        disabled={isBooleanDisabled && isNumberDisabled}
                         maxLength={80}
                         onChange={this.onChangeName}
                         placeholder='Variable name'
@@ -72,6 +91,7 @@ class CreateVariable extends React.Component<Props, CreateVariableState> {
                         value={this.state.name}
                     />
                     <button
+                        disabled={isBooleanDisabled && isNumberDisabled}
                         onClick={this.onAddVariable}
                         type='button'
                     >
@@ -116,8 +136,19 @@ class CreateVariable extends React.Component<Props, CreateVariableState> {
                 ...this.state
             });
 
+            let dataType: 'boolean' | 'real' = 'real';
+            if (
+                (this.state.dataType === 'real') &&
+                (this.props.realVariableCount >= MAXIMUM_VARIABLE_COUNT - 1) &&
+                (this.props.booleanVariableCount < MAXIMUM_VARIABLE_COUNT)
+            ) {
+                // We've exhausted the set of real variables so default to
+                // making booleans.
+                dataType = 'boolean';
+            }
+
             this.setState({
-                dataType: 'real',
+                dataType,
                 name: ''
             });
         }
