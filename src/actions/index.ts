@@ -2,7 +2,6 @@ import { createAction } from 'redux-actions';
 
 export interface AddVariablePayload {
     dataType: 'boolean' | 'real';
-    type: 'input' | 'output';
     name: string;
 }
 
@@ -14,12 +13,12 @@ export interface InsertGenePayload {
 
 export const insertGene = createAction<InsertGenePayload>('insertGene');
 
-export interface ShiftGenePayload {
-    direction: 'up' | 'down';
+export interface RemoveGenePayload {
     id: string;
 }
 
-export const shiftGene = createAction<ShiftGenePayload>('shiftGene');
+export const removeGene =
+    createAction<RemoveGenePayload>('removeGene');
 
 export interface RemoveVariablePayload {
     name: string;
@@ -29,9 +28,22 @@ export interface RemoveVariablePayload {
 export const removeVariable =
     createAction<RemoveVariablePayload>('removeVariable');
 
-export const updateGene = createAction('updateGene');
+export interface ShiftGenePayload {
+    direction: 'up' | 'down';
+    id: string;
+}
+
+export const shiftGene = createAction<ShiftGenePayload>('shiftGene');
 
 export interface UpdateGenePayload {
     id: string;
     text: string;
 }
+
+export const updateGene = createAction<UpdateGenePayload>('updateGene');
+
+export interface UpdateNamePayload {
+    name: string;
+}
+
+export const updateName = createAction<UpdateNamePayload>('updateName');

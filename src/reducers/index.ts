@@ -3,266 +3,13 @@ import {
     handleActions
 } from 'redux-actions';
 import * as Actions from './../actions/index';
-import {
-    State,
-    Variable
-} from './../types/state';
-
-const knownVariables: ReadonlyArray<Variable> = [
-    [
-        'my age',
-        'input',
-        'real'
-    ],
-    [
-        'my angle',
-        'input',
-        'real'
-    ],
-    [
-        'my angular velocity',
-        'input',
-        'real'
-    ],
-    [
-        'my health',
-        'input',
-        'real'
-    ],
-    [
-        'my speed',
-        'input',
-        'real'
-    ],
-    [
-        'the distance to the nearest food to my left',
-        'input',
-        'real'
-    ],
-    [
-        'the distance to the nearest food to my right',
-        'input',
-        'real'
-    ],
-    [
-        'the distance to the nearest food in front of me',
-        'input',
-        'real'
-    ],
-    [
-        'the distance to the nearest creature to my left',
-        'input',
-        'real'
-    ],
-    [
-        'the distance to the nearest creature to my right',
-        'input',
-        'real'
-    ],
-    [
-        'the distance to the nearest creature in front of me',
-        'input',
-        'real'
-    ],
-    [
-        'the noise level in front of me',
-        'input',
-        'real'
-    ],
-    [
-        'the noise level to the left of me',
-        'input',
-        'real'
-    ],
-    [
-        'the noise level to the right of me',
-        'input',
-        'real'
-    ],
-    [
-        'the noise level behind me',
-        'input',
-        'real'
-    ],
-    [
-        'my longitude',
-        'input',
-        'real'
-    ],
-    [
-        'my latitude',
-        'input',
-        'real'
-    ],
-    [
-        'I am aggressive',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am moving',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am fast',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am red',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am green',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am blue',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am dividing',
-        'input',
-        'boolean'
-    ],
-    [
-        'I am trying to mate',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature in front of me is a carnivore',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature in front of me is a red',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature in front of me is a green',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature in front of me is a blue',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the left of me is a carnivore',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the left of me is a red',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the left of me is a green',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the left of me is a blue',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the right of me is a carnivore',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the right of me is a red',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the right of me is a green',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature to the right of me is a blue',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature behind me is a carnivore',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature behind me is a red',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature behind me is a green',
-        'input',
-        'boolean'
-    ],
-    [
-        'the nearest creature behind me is a blue',
-        'input',
-        'boolean'
-    ],
-    [
-        'my angular velocity',
-        'output',
-        'real'
-    ],
-    [
-        'I am aggressive',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am moving',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am fast',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am red',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am green',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am blue',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am dividing',
-        'output',
-        'boolean'
-    ],
-    [
-        'I am trying to mate',
-        'output',
-        'boolean'
-    ]
-];
+import knownVariables from './../knownVariables';
+import { State } from './../types/state';
+import { Variable } from './../types/variable';
 
 const initialState: State = {
     genes: new Map(),
+    name: '',
     order: [],
     variables: knownVariables
 };
@@ -274,11 +21,41 @@ const makeGeneId = () => {
 };
 
 type Payloads =
+    Actions.AddVariablePayload |
     Actions.InsertGenePayload |
+    Actions.RemoveGenePayload |
+    Actions.RemoveVariablePayload |
     Actions.ShiftGenePayload |
-    Actions.UpdateGenePayload;
+    Actions.UpdateGenePayload |
+    Actions.UpdateNamePayload;
 
 export const reducer = handleActions<State, Payloads>({
+    addVariable: (state, action: Action<Actions.AddVariablePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const { dataType, name } = action.payload;
+        const updatedVariables: Variable[] = [
+            ...state.variables,
+            {
+                dataType,
+                name,
+                type: 'input'
+            },
+            {
+                dataType,
+                name,
+                type: 'output'
+            }
+        ];
+
+        return {
+            ...state,
+            variables: updatedVariables
+        };
+    },
+
     insertGene: (state, action: Action<Actions.InsertGenePayload>) => {
         if (!action.payload) {
             return state;
@@ -296,6 +73,40 @@ export const reducer = handleActions<State, Payloads>({
             ...state,
             genes: updatedGenes,
             order: updatedOrder
+        };
+    },
+
+    removeGene: (state, action: Action<Actions.RemoveGenePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const { id } = action.payload;
+        const updatedGenes = new Map(state.genes.entries());
+        updatedGenes.delete(id);
+        const updatedOrder = state.order.filter(geneId => geneId !== id);
+
+        return {
+            ...state,
+            genes: updatedGenes,
+            order: updatedOrder
+        };
+    },
+
+    removeVariable: (state, action: Action<Actions.RemoveVariablePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const { name, type } = action.payload;
+        const updatedVariables = state.variables.filter(
+            variable =>
+                (variable.name.toLowerCase() !== name.toLowerCase()) ||
+                (variable.type !== type));
+
+        return {
+            ...state,
+            variables: updatedVariables
         };
     },
 
@@ -333,6 +144,18 @@ export const reducer = handleActions<State, Payloads>({
         return {
             ...state,
             genes: updatedGenes
+        };
+    },
+
+    updateName: (state, action: Action<Actions.UpdateNamePayload>) => {
+        if (!action.payload) {
+            return state;
+        }
+
+        const { name } = action.payload;
+        return {
+            ...state,
+            name
         };
     }
 }, initialState);

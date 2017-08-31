@@ -1,0 +1,245 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+
+    padding: 0;
+    margin: 0;
+}
+
+#app {
+    height: 100%;
+}
+
+.app-root {
+    box-sizing: border-box;
+    padding: 1em;
+    height: 100%;
+}
+
+.app-root header {
+    margin-bottom: 1em;
+}
+
+.app-root header ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.app-root header li {
+    padding: 0 1em;
+}
+
+.app-root header li:first-of-type {
+    padding-left: 0;
+}
+
+.app-root header li:last-of-type {
+    flex-grow: 1;
+    text-align: right;
+    padding-right: 0;
+}
+
+.app-root header a {
+    text-decoration: none;
+}
+
+.creature-name {
+    margin-bottom: 1em;
+}
+
+.creature-name input {
+    font-size: 200%;
+
+    border: thin solid lightgray;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.editors {
+    flex-grow: 1;
+    display: flex;
+}
+
+.gene-insertion-point {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    opacity: 0.01;
+
+    padding: 0.25em 0;
+}
+
+.gene-insertion-point:hover, .gene-insertion-point:only-of-type {
+    opacity: 0.75;
+}
+
+.gene-insertion-point span {
+    padding: 0 1em;
+}
+
+.gene-insertion-point::before, .gene-insertion-point::after {
+    position: absolute;
+    top: 51%;
+    overflow: hidden;
+    width: 50%;
+    height: 1px;
+    content: '\a0';
+    border-top: 1px dashed dimgray;
+}
+
+.gene-insertion-point::before {
+    margin-left: -50%;
+    text-align: right;
+}
+
+.gene-list {
+    flex-grow: 1;
+    padding-right: 1em;
+}
+
+.gene-list > :last-child {
+    flex-grow: 1;
+}
+
+.gene {
+    display: flex;
+    margin: 0.25em 0;
+}
+
+.gene-ordering {
+    display: flex;
+    flex-direction: column;
+}
+
+.gene-removal button {
+    background-color: transparent;
+    border: none;
+}
+
+.gene > textarea {
+    flex-grow: 1;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 100%;
+    resize: vertical;
+}
+
+.variable-pane {
+    max-width: 24em;
+    min-width: 24em;
+}
+
+.variable-list {
+    margin-bottom: 2em;
+    width: 100%;
+}
+
+.variable-list table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.variable-list .selected {
+    background-color: lightskyblue;
+}
+
+.variable-list thead {
+    display: block;
+}
+
+.variable-list thead td {
+    font-size: 100%;
+    color: darkgray;
+}
+
+.variable-list tbody {
+    display: block;
+    max-height: 20vh;
+    overflow-y: auto;
+    border: 1px inset darkgray;
+}
+
+.variable-list td:first-of-type {
+    padding: 0 1em;
+    width: 3em;
+}
+
+.variable-list td:last-of-type {
+    padding: 0 1em 0 0;
+}
+
+.variable-list tr {
+    display: block;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.variable-list tbody tr:hover {
+    background: whitesmoke;
+}
+
+.variable-list caption {
+    font-size: 150%;
+    font-family: sans-serif;
+}
+
+.variable-list-controls {
+    display: flex;
+}
+
+.variable-list-controls input {
+    flex-grow: 1;
+    font-size: 100%;
+}
+
+.variable-list-controls button {
+    font-size: 100%;
+}
+
+.create-variable-title {
+    font-size: 150%;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.create-variable-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.create-variable-details select {
+    font-size: 100%;
+
+    padding: 2px;
+    width: 5.5em;
+}
+
+.create-variable-details input {
+    font-size: 100%;
+    flex-grow: 1;
+}
+
+.create-variable-details button {
+    font-size: 100%;
+}
+
+.create-variable-status {
+    margin-top: 1em;
+    text-align: right;
+}
+
+.variable-count {
+    font-weight: bold;
+}

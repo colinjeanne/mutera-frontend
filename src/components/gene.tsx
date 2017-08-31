@@ -6,16 +6,16 @@ import {
     Dispatch
 } from 'redux';
 import {
+    removeGene,
+    RemoveGenePayload,
     shiftGene,
     ShiftGenePayload,
     updateGene,
     UpdateGenePayload
 } from './../actions/index';
 import parse, { VariableTypes } from './../language/parse';
-import {
-    State,
-    Variable
-} from './../types/state';
+import { State } from './../types/state';
+import { Variable } from './../types/variable';
 
 interface OwnProps {
     id: string;
@@ -30,6 +30,7 @@ interface MappedProps {
 }
 
 interface DispatchProps {
+    onRemoveGene: (s: RemoveGenePayload) => Action;
     onShiftGene: (s: ShiftGenePayload) => Action;
     onUpdateGene: (s: UpdateGenePayload) => Action;
 }
@@ -40,16 +41,18 @@ class Gene extends React.Component<GeneProps> {
     public render() {
         return (
             <div className='gene'>
-                <div className='gene-controls'>
+                <div className='gene-ordering'>
                     <button
                         disabled={this.props.isFirst}
                         onClick={this.onShiftUp}
+                        type='button'
                     >
                         {'\u25b2'}
                     </button>
                     <button
                         disabled={this.props.isLast}
                         onClick={this.onShiftDown}
+                        type='button'
                     >
                         {'\u25bc'}
                     </button>
@@ -61,6 +64,14 @@ class Gene extends React.Component<GeneProps> {
                     spellCheck={false}
                     value={this.props.text}
                 />
+                <div className='gene-removal'>
+                    <button
+                        onClick={this.onRemoveGene}
+                        type='button'
+                    >
+                        {'\u2716'}
+                    </button>
+                </div>
             </div>
         );
     }
@@ -78,6 +89,12 @@ class Gene extends React.Component<GeneProps> {
         this.props.onUpdateGene({
             id: this.props.id,
             text
+        });
+    }
+
+    private onRemoveGene = () => {
+        this.props.onRemoveGene({
+            id: this.props.id
         });
     }
 
@@ -101,7 +118,7 @@ const selectVariablesByType = (
     type: 'input' | 'output'
 ) => {
     const variableTypes: VariableTypes = {};
-    for (const [name, variableType, dataType] of variables) {
+    for (const { name, type: variableType, dataType } of variables) {
         if (type === variableType) {
             variableTypes[name.toLowerCase()] = dataType;
         }
@@ -125,6 +142,7 @@ const mapStateToProps = (state: State, ownProps: OwnProps): MappedProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): DispatchProps =>
     bindActionCreators({
+        onRemoveGene: removeGene,
         onShiftGene: shiftGene,
         onUpdateGene: updateGene
     },

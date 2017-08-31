@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    State,
-    Variable
-} from './../types/state';
+import { State } from './../types/state';
+import { Variable } from './../types/variable';
+import CreateVariable from './createVariable';
 import VariableList from './variableList';
 
 interface VariableWithDataType {
@@ -21,7 +20,7 @@ const selectVariablesByType = (
     type: 'input' | 'output'
 ) => {
     const selected: VariableWithDataType[] = [];
-    for (const [name, variableType, dataType] of variables) {
+    for (const { name, type: variableType, dataType} of variables) {
         if (type === variableType) {
             selected.push({
                 dataType,
@@ -34,7 +33,7 @@ const selectVariablesByType = (
 };
 
 const variableEditor: React.SFC<Props> = props => (
-    <div className='variable-editor'>
+    <div className='variable-pane'>
         <VariableList
             title='Input Variables'
             type='input'
@@ -45,6 +44,7 @@ const variableEditor: React.SFC<Props> = props => (
             type='output'
             variables={props.outputVariables}
         />
+        <CreateVariable />
     </div>
 );
 

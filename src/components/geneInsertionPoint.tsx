@@ -27,6 +27,7 @@ class GeneInsertionPoint extends React.PureComponent<GeneInsertionPointProps> {
             <button
                 className='gene-insertion-point'
                 onClick={this.onInsertGene}
+                type='button'
             >
                 <span>Insert gene</span>
             </button>

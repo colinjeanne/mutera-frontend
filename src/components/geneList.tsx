@@ -4,11 +4,11 @@ import { State } from './../types/state';
 import Gene from './gene';
 import GeneInsertionPoint from './geneInsertionPoint';
 
-interface EditorProps {
+interface GeneListProps {
     genes: ReadonlyArray<string>;
 }
 
-const editor: React.SFC<EditorProps> = props => {
+const geneList: React.SFC<GeneListProps> = props => {
     const children = props.genes.reduce<JSX.Element[]>((aggregate, id, index) => {
         aggregate.push(
             <GeneInsertionPoint
@@ -30,7 +30,7 @@ const editor: React.SFC<EditorProps> = props => {
         />);
 
     return (
-        <div className='gene-editor'>
+        <div className='gene-list'>
             {children}
         </div>
     );
@@ -40,4 +40,4 @@ const mapStateToProps = (state: State) => ({
     genes: state.order
 });
 
-export default connect(mapStateToProps)(editor);
+export default connect(mapStateToProps)(geneList);

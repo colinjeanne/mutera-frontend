@@ -28,6 +28,9 @@ module.exports = {
         path: path.resolve(__dirname, 'umd'),
         umdNamedDefine: true
     },
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
         mainFields: ['main']
