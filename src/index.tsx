@@ -66,7 +66,7 @@ export class Root extends React.Component<{}, State> {
                                         href='#'
                                         onClick={this.onNavigate}
                                     >
-                                        Language Reference
+                                        How to Make a Creature
                                     </a>
                                 </li>
                             </ul>
