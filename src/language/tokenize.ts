@@ -13,6 +13,8 @@ class TokenizationError extends Error {
     }
 }
 
+const isConstant = (token: string) => /\d/.test(token[0]);
+
 const tokenize = (s: string) => {
     const elements = s.
         toLowerCase().
@@ -24,7 +26,7 @@ const tokenize = (s: string) => {
     let variableStart = -1;
     for (let i = 0; i < elements.length; ++i) {
         const token = elements[i];
-        if (isKnownToken(token)) {
+        if (isKnownToken(token) || isConstant(token)) {
             if (variableStart !== -1) {
                 const data = elements.slice(variableStart, i).join(' ');
                 parsedTokens.push({
@@ -34,7 +36,9 @@ const tokenize = (s: string) => {
 
                 variableStart = -1;
             }
+        }
 
+        if (isKnownToken(token)) {
             const previousToken = (i !== 0) ?
                 parsedTokens[parsedTokens.length - 1].token :
                 null;
@@ -55,7 +59,7 @@ const tokenize = (s: string) => {
                     token: token as Token
                 } as ParsedToken);
             }
-        } else if (/\d/.test(token[0])) {
+        } else if (isConstant(token)) {
             let constant = parseFloat(token);
             while (
                 parsedTokens.length &&

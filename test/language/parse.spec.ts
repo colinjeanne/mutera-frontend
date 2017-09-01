@@ -42,7 +42,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if true';
+        const gene = 'good := true';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -60,7 +60,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'if true then good if true';
+        const gene = 'if true then good := true';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -113,7 +113,7 @@ describe('parse', function() {
         expect(() => parse(missingOutput, inputVariables, outputVariables)).
             to.throw('Missing output variable');
 
-        const incorrectOutput = 'if true then is 3';
+        const incorrectOutput = 'if true then := 3';
         expect(() => parse(incorrectOutput, inputVariables, outputVariables)).
             to.throw('Missing output variable');
     });
@@ -142,20 +142,20 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'if true then good if';
+        const gene = 'if true then good :=';
         expect(() => parse(gene, inputVariables, outputVariables)).
             to.throw('Empty expression');
     });
 
-    it('requires non-default expressions to be preceded by "if" for boolean outputs', function() {
+    it('requires non-default expressions to be preceded by ":=" for boolean outputs', function() {
         const inputVariables = {};
         const outputVariables: VariableTypes = {
             good: 'boolean'
         };
 
-        const gene = 'if true then good is true';
+        const gene = 'if true then good true';
         expect(() => parse(gene, inputVariables, outputVariables)).
-            to.throw('Missing if');
+            to.throw('Missing :=');
     });
 
     it('parses boolean expressions for boolean outputs', function() {
@@ -164,7 +164,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if true and false';
+        const gene = 'good := true and false';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -186,20 +186,20 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if 3';
+        const gene = 'good := 3';
         expect(() => parse(gene, inputVariables, outputVariables)).
             to.throw('Expected boolean valued expression');
     });
 
-    it('requires non-default expressions to be preceded by "is" for real outputs', function() {
+    it('requires non-default expressions to be preceded by ":=" for real outputs', function() {
         const inputVariables = {};
         const outputVariables: VariableTypes = {
             good: 'real'
         };
 
-        const gene = 'if true then good if 3';
+        const gene = 'if true then good 3';
         expect(() => parse(gene, inputVariables, outputVariables)).
-            to.throw('Missing is');
+            to.throw('Missing :=');
     });
 
     it('parses real expressions for real outputs', function() {
@@ -208,7 +208,7 @@ describe('parse', function() {
             good: 'real'
         };
 
-        const gene = 'good is 3 + 2';
+        const gene = 'good := 3 + 2';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -230,7 +230,7 @@ describe('parse', function() {
             good: 'real'
         };
 
-        const gene = 'good is true';
+        const gene = 'good := true';
         expect(() => parse(gene, inputVariables, outputVariables)).
             to.throw('Expected real valued expression');
     });
@@ -241,11 +241,11 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const missingOpening = 'good if true)';
+        const missingOpening = 'good := true)';
         expect(() => parse(missingOpening, inputVariables, outputVariables)).
             to.throw('Missing opening parentheses');
 
-        const missingClosing = 'good if (true';
+        const missingClosing = 'good := (true';
         expect(() => parse(missingClosing, inputVariables, outputVariables)).
             to.throw('Missing closing parentheses');
     });
@@ -276,15 +276,15 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const missingArgument = 'good if not';
+        const missingArgument = 'good := not';
         expect(() => parse(missingArgument, inputVariables, outputVariables)).
             to.throw('Unexpected token "not"');
 
-        const realArgument = 'good if not 3';
+        const realArgument = 'good := not 3';
         expect(() => parse(realArgument, inputVariables, outputVariables)).
             to.throw('Operator "not" cannot be applied to real values');
 
-        const gene = 'good if not true';
+        const gene = 'good := not true';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -319,26 +319,26 @@ describe('parse', function() {
                 good: 'boolean'
             };
 
-            const noArguments = `good if ${token}`;
+            const noArguments = `good := ${token}`;
             expect(() => parse(noArguments, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const noRightArgument = `good if true ${token}`;
+            const noRightArgument = `good := true ${token}`;
             expect(
                 () => parse(noRightArgument, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const noLeftArgument = `good if ${token} true`;
+            const noLeftArgument = `good := ${token} true`;
             expect(
                 () => parse(noLeftArgument, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const realArguments = `good if 3 ${token} 3`;
+            const realArguments = `good := 3 ${token} 3`;
             expect(() => parse(realArguments, inputVariables, outputVariables)).
                 to.throw(
                     `Operator "${token}" cannot be applied to real values`);
 
-            const gene = `good if true ${token} false`;
+            const gene = `good := true ${token} false`;
             const tree = parse(gene, inputVariables, outputVariables);
 
             const expected = {
@@ -362,28 +362,28 @@ describe('parse', function() {
                 good: 'real'
             };
 
-            const noArguments = `good is ${token}`;
+            const noArguments = `good := ${token}`;
             expect(() => parse(noArguments, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const noRightArgument = `good is 3 ${token}`;
+            const noRightArgument = `good := 3 ${token}`;
             expect(
                 () => parse(noRightArgument, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
             if (token !== '-') {
-                const noLeftArgument = `good is ${token} 3`;
+                const noLeftArgument = `good := ${token} 3`;
                 expect(
                     () => parse(noLeftArgument, inputVariables, outputVariables)).
                     to.throw(`Unexpected token "${token}"`);
             }
 
-            const booleanArguments = `good is true ${token} true`;
+            const booleanArguments = `good := true ${token} true`;
             expect(() => parse(booleanArguments, inputVariables, outputVariables)).
                 to.throw(
                     `Operator "${token}" cannot be applied to boolean values`);
 
-            const gene = `good is 3 ${token} 2`;
+            const gene = `good := 3 ${token} 2`;
             const tree = parse(gene, inputVariables, outputVariables);
 
             const expected = {
@@ -407,26 +407,26 @@ describe('parse', function() {
                 good: 'boolean'
             };
 
-            const noArguments = `good if ${token}`;
+            const noArguments = `good := ${token}`;
             expect(() => parse(noArguments, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const noRightArgument = `good if 3 ${token}`;
+            const noRightArgument = `good := 3 ${token}`;
             expect(
                 () => parse(noRightArgument, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const noLeftArgument = `good if ${token} 3`;
+            const noLeftArgument = `good := ${token} 3`;
             expect(
                 () => parse(noLeftArgument, inputVariables, outputVariables)).
                 to.throw(`Unexpected token "${token}"`);
 
-            const booleanArguments = `good if true ${token} true`;
+            const booleanArguments = `good := true ${token} true`;
             expect(() => parse(booleanArguments, inputVariables, outputVariables)).
                 to.throw(
                     `Operator "${token}" cannot be applied to boolean values`);
 
-            const gene = `good if 3 ${token} 2`;
+            const gene = `good := 3 ${token} 2`;
             const tree = parse(gene, inputVariables, outputVariables);
 
             const expected = {
@@ -449,7 +449,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if true true';
+        const gene = 'good := true true';
         expect(() => parse(gene, inputVariables, outputVariables)).
             to.throw('Missing operator');
     });
@@ -478,7 +478,7 @@ describe('parse', function() {
             good: 'real'
         };
 
-        const gene = 'good is -4 + -0';
+        const gene = 'good := -4 + -0';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -503,11 +503,11 @@ describe('parse', function() {
             good: 'real'
         };
 
-        const booleanArgument = 'good is -true';
+        const booleanArgument = 'good := -true';
         expect(() => parse(booleanArgument, inputVariables, outputVariables)).
             to.throw('Operator "-" cannot be applied to boolean values');
 
-        const gene = 'good is -(3 + 2)';
+        const gene = 'good := -(3 + 2)';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -532,7 +532,7 @@ describe('parse', function() {
             good: 'real'
         };
 
-        const gene = 'good is -(3 + 2) * -(2 + 3)';
+        const gene = 'good := -(3 + 2) * -(2 + 3)';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -568,7 +568,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if not true and not false or true';
+        const gene = 'good := not true and not false or true';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -600,7 +600,7 @@ describe('parse', function() {
             good: 'real'
         };
 
-        const gene = 'good is 3 * 2 + 3 / 2 - 3';
+        const gene = 'good := 3 * 2 + 3 / 2 - 3';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -634,7 +634,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if 3 * 2 < 3 + 2';
+        const gene = 'good := 3 * 2 < 3 + 2';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -664,7 +664,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if 3 > 2 and 2 < 3 or 3 > 2 or 2 < 3';
+        const gene = 'good := 3 > 2 and 2 < 3 or 3 > 2 or 2 < 3';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {
@@ -710,7 +710,7 @@ describe('parse', function() {
             good: 'boolean'
         };
 
-        const gene = 'good if true or false and true';
+        const gene = 'good := true or false and true';
         const tree = parse(gene, inputVariables, outputVariables);
 
         const expected = {

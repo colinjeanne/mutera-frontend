@@ -395,7 +395,7 @@ const parse = (
             expression = {
                 operator: 'T'
             };
-        } else if (tokens[0].token === Token.If) {
+        } else if (tokens[0].token === Token.IsSetTo) {
             expression = parseExpression(
                 tokens.slice(1),
                 inputVariables,
@@ -403,11 +403,11 @@ const parse = (
                     isReal: false
                 });
         } else {
-            throw new ParseError('Missing if');
+            throw new ParseError('Missing :=');
         }
     } else {
-        if (!tokens.length || (tokens[0].token !== Token.Is)) {
-            throw new ParseError('Missing is');
+        if (!tokens.length || (tokens[0].token !== Token.IsSetTo)) {
+            throw new ParseError('Missing :=');
         }
 
         expression = parseExpression(

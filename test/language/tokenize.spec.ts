@@ -17,7 +17,7 @@ describe('tokenize', function() {
     });
 
     it('tokenizes known tokens', function() {
-        const s = 'and ) - 3.875 / false > if is < - * not ( or + then true';
+        const s = 'and ) - 3.875 / false > if := < - * not ( or + then true';
         expect(tokenize(s)).to.deep.equal([
             {
                 token: Token.And
@@ -45,7 +45,7 @@ describe('tokenize', function() {
                 token: Token.If
             },
             {
-                token: Token.Is
+                token: Token.IsSetTo
             },
             {
                 token: Token.LessThan

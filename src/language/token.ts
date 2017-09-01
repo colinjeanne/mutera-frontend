@@ -8,7 +8,7 @@ export enum Token {
     False = 'false',
     GreaterThan = '>',
     If = 'if',
-    Is = 'is',
+    IsSetTo = ':=',
     LessThan = '<',
     Minus = '-',
     MultipliedBy = '*',
@@ -29,7 +29,7 @@ export const isKnownToken = (s: string): s is Token =>
     (s === Token.False) ||
     (s === Token.GreaterThan) ||
     (s === Token.If) ||
-    (s === Token.Is) ||
+    (s === Token.IsSetTo) ||
     (s === Token.LessThan) ||
     (s === Token.Minus) ||
     (s === Token.MultipliedBy) ||
@@ -44,7 +44,7 @@ export const isKnownToken = (s: string): s is Token =>
 export const isKeyword = (token: Token) =>
     [
         Token.If,
-        Token.Is,
+        Token.IsSetTo,
         Token.Then
     ].includes(token);
 
@@ -77,7 +77,7 @@ type DatalessToken =
     Token.False |
     Token.GreaterThan |
     Token.If |
-    Token.Is |
+    Token.IsSetTo |
     Token.LessThan |
     Token.Minus |
     Token.MultipliedBy |
