@@ -9,6 +9,16 @@ body {
     margin: 0;
 }
 
+h2, caption {
+    font-size: 150%;
+    font-family: sans-serif;
+    font-weight: normal;
+    text-align: center;
+
+    margin: 0;
+    padding: 0;
+}
+
 #app {
     height: 100%;
 }
@@ -63,6 +73,11 @@ body {
 .editors {
     flex-grow: 1;
     display: flex;
+}
+
+.body-editor {
+    max-width: 24em;
+    min-width: 24em;
 }
 
 .gene-insertion-point {
@@ -190,11 +205,6 @@ body {
     background: whitesmoke;
 }
 
-.variable-list caption {
-    font-size: 150%;
-    font-family: sans-serif;
-}
-
 .variable-list-controls {
     display: flex;
 }
@@ -206,12 +216,6 @@ body {
 
 .variable-list-controls button {
     font-size: 100%;
-}
-
-.create-variable-title {
-    font-size: 150%;
-    font-family: sans-serif;
-    text-align: center;
 }
 
 .create-variable-details {

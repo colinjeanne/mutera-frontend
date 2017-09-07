@@ -62,7 +62,7 @@ class CreateVariable extends React.Component<Props, CreateVariableState> {
 
         return (
             <div className='create-variable'>
-                <div className='create-variable-title'>Add Variable</div>
+                <h2>Add Variable</h2>
                 <div className='create-variable-details'>
                     <select
                         disabled={isBooleanDisabled && isNumberDisabled}
