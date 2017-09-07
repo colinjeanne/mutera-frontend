@@ -5,7 +5,7 @@ import GeneList from './geneList';
 import VariablePane from './variablePane';
 
 const creatureEditor: React.SFC = () => (
-    <div>
+    <div className='creature-editor'>
         <CreatureName />
         <div className='editors'>
             <BodyEditor />

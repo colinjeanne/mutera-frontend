@@ -24,6 +24,8 @@ h2, caption {
 }
 
 .app-root {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     padding: 1em;
     height: 100%;
@@ -60,6 +62,12 @@ h2, caption {
 
 .creature-name {
     margin-bottom: 1em;
+}
+
+.creature-editor {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .creature-name input {
@@ -119,13 +127,19 @@ h2, caption {
     text-align: right;
 }
 
-.gene-list {
+.gene-list-scroller {
     flex-grow: 1;
-    padding-right: 1em;
+    position: relative;
 }
 
-.gene-list > :last-child {
-    flex-grow: 1;
+.gene-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    overflow-y: auto;
 }
 
 .gene {
@@ -154,6 +168,8 @@ h2, caption {
 .variable-pane {
     max-width: 24em;
     min-width: 24em;
+
+    padding-left: 1em;
 }
 
 .variable-list {

@@ -30,8 +30,10 @@ const geneList: React.SFC<GeneListProps> = props => {
         />);
 
     return (
-        <div className='gene-list'>
-            {children}
+        <div className='gene-list-scroller'>
+            <div className='gene-list'>
+                {children}
+            </div>
         </div>
     );
 };
